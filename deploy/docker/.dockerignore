@@ -1,0 +1,101 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+pytest_results.txt
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Logs and metrics
+logs/
+*.log
+tracker_logs/
+metrics/
+
+# Artifacts and outputs
+artifacts/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation build
+docs/_build/
+site/
+
+# Stories and specifications
+stories/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Development and test files
+tests/
+test_*.py
+*_test.py
+verify_*.py
+validate_*.py
+test_all.py
+final_verification.py
+
+# Dev dependencies
+requirements-dev.txt
+
+# Large data files
+*.csv
+*.parquet
+*.json
+data/
+
+# Grafana templates
+grafana_templates/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Project documentation (optional - include if needed)
+*.md
+!README.md
+!INSTALL.md
+
+# Notebooks
+*.ipynb

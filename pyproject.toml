@@ -1,0 +1,120 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odibi-core"
+version = "1.1.0"
+description = "Node-centric, engine-agnostic, config-driven data engineering framework"
+authors = [{name = "Henry Odibi", email = "henryodibi@outlook.com"}]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+keywords = ["data-engineering", "spark", "pandas", "etl", "medallion"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    "pandas>=1.5.0",
+    "typing-extensions>=4.0.0",
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "streamlit>=1.32.0",
+    "markdown>=3.4.0",
+]
+
+[project.optional-dependencies]
+duckdb = [
+    "duckdb>=0.9.0",
+]
+
+spark = [
+    "pyspark>=3.3.0",
+]
+
+functions = [
+    "iapws>=1.5.0",
+]
+
+formats = [
+    "pandavro>=1.7.0",
+    "sqlalchemy>=2.0.0",
+    "pyodbc>=4.0.0",
+]
+
+all = [
+    "duckdb>=0.9.0",
+    "pyspark>=3.3.0",
+    "iapws>=1.5.0",
+    "pandavro>=1.7.0",
+    "sqlalchemy>=2.0.0",
+    "pyodbc>=4.0.0",
+]
+
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "pandas-stubs>=1.5.0",
+]
+
+studio = [
+    "streamlit>=1.30.0",
+    "plotly>=5.18.0",
+    "watchdog>=4.0.0",
+]
+
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "pandas-stubs>=1.5.0",
+    "duckdb>=0.9.0",
+    "pyspark>=3.3.0",
+    "iapws>=1.5.0",
+    "ipython>=8.0.0",
+    "jupyter>=1.0.0",
+    "streamlit>=1.30.0",
+    "plotly>=5.18.0",
+    "watchdog>=4.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["odibi_core*"]
+
+[project.scripts]
+odibi = "odibi_core.cli:main"
+learnodibi = "odibi_core.learnodibi:launch_ui"
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "parity: Parity tests between engines",
+    "slow: Slow-running tests",
+]
