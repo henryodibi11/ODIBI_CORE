@@ -175,7 +175,7 @@ Before implementing streaming logic, establish the directory structure. This pre
    ```
 
 2. Create `streaming/__init__.py`:
-   ```python
+   ```python[demo]
    """
    Streaming and incremental processing support for ODIBI CORE.
    
@@ -194,7 +194,7 @@ Before implementing streaming logic, establish the directory structure. This pre
    ```
 
 3. Create `checkpoint/__init__.py`:
-   ```python
+   ```python[demo]
    """
    Checkpoint and resume support for ODIBI CORE pipelines.
    
@@ -213,7 +213,7 @@ Before implementing streaming logic, establish the directory structure. This pre
    ```
 
 4. Create `scheduler/__init__.py`:
-   ```python
+   ```python[demo]
    """
    Scheduling support for ODIBI CORE pipelines.
    
@@ -292,7 +292,7 @@ Data classes define the **contract** for streaming configuration. By creating th
 1. Create file: `odibi_core/streaming/stream_manager.py`
 
 2. Add imports and enums:
-   ```python
+   ```python[demo]
    """
    Stream manager for incremental and continuous data processing.
    
@@ -325,7 +325,7 @@ Data classes define the **contract** for streaming configuration. By creating th
    ```
 
 3. Add configuration dataclass:
-   ```python
+   ```python[demo]
    @dataclass
    class StreamConfig:
        """
@@ -354,7 +354,7 @@ Data classes define the **contract** for streaming configuration. By creating th
    ```
 
 4. Add source dataclass:
-   ```python
+   ```python[demo]
    @dataclass
    class StreamSource:
        """
@@ -424,7 +424,7 @@ The StreamManager class is the entry point for all streaming operations. Buildin
 **What to Do**
 
 1. Add StreamManager class skeleton:
-   ```python
+   ```python[demo]
    class StreamManager:
        """
        Manages streaming data sources and sinks for continuous processing.
@@ -459,7 +459,7 @@ The StreamManager class is the entry point for all streaming operations. Buildin
    ```
 
 2. Add factory method:
-   ```python
+   ```python[demo]
        @classmethod
        def from_source(
            cls,
@@ -510,7 +510,7 @@ The StreamManager class is the entry point for all streaming operations. Buildin
    ```
 
 3. Add file reading helper:
-   ```python
+   ```python[demo]
        def _read_file(
            self,
            path: str,
@@ -603,7 +603,7 @@ File watch mode is the simplest streaming pattern: monitor a directory, read new
 **What to Do**
 
 1. Add file watch implementation:
-   ```python
+   ```python[demo]
        def _read_file_watch(
            self,
            source: StreamSource,
@@ -654,7 +654,7 @@ File watch mode is the simplest streaming pattern: monitor a directory, read new
    ```
 
 2. Add read_batch method:
-   ```python
+   ```python[demo]
        def read_batch(
            self,
            source_name: str,
@@ -740,7 +740,7 @@ Incremental mode enables processing only **new** records from a file by tracking
 **What to Do**
 
 1. Add watermark persistence helpers:
-   ```python
+   ```python[demo]
        def _save_watermark(self, source: StreamSource, value: Any) -> None:
            """Save watermark value to file."""
            if source.config.watermark_file:
@@ -761,7 +761,7 @@ Incremental mode enables processing only **new** records from a file by tracking
    ```
 
 2. Add incremental read implementation:
-   ```python
+   ```python[demo]
        def _read_incremental(
            self,
            source: StreamSource,
@@ -862,7 +862,7 @@ A generator function enables **continuous** streaming: calling `stream.read()` y
 **What to Do**
 
 1. Add read generator:
-   ```python
+   ```python[demo]
        def read(
            self,
            source_name: Optional[str] = None,
@@ -898,7 +898,7 @@ A generator function enables **continuous** streaming: calling `stream.read()` y
    ```
 
 2. Add status methods:
-   ```python
+   ```python[demo]
        def add_source(self, name: str, config: StreamConfig) -> None:
            """Add a new streaming source."""
            source = StreamSource(name=name, config=config)
@@ -948,7 +948,7 @@ Checkpoints are serialized DAG state. Before implementing save/load logic, defin
 1. Create file: `odibi_core/checkpoint/checkpoint_manager.py`
 
 2. Add imports and enums:
-   ```python
+   ```python[demo]
    """
    Checkpoint manager for DAG state persistence and recovery.
    
@@ -977,7 +977,7 @@ Checkpoints are serialized DAG state. Before implementing save/load logic, defin
    ```
 
 3. Add NodeCheckpoint dataclass:
-   ```python
+   ```python[demo]
    @dataclass
    class NodeCheckpoint:
        """Checkpoint for a single node."""
@@ -994,7 +994,7 @@ Checkpoints are serialized DAG state. Before implementing save/load logic, defin
    ```
 
 4. Add Checkpoint dataclass:
-   ```python
+   ```python[demo]
    @dataclass
    class Checkpoint:
        """
@@ -1054,7 +1054,7 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
 **What to Do**
 
 1. Add CheckpointManager class:
-   ```python
+   ```python[demo]
    class CheckpointManager:
        """
        Manages DAG checkpoint persistence and recovery.
@@ -1078,7 +1078,7 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
    ```
 
 2. Add create_checkpoint method:
-   ```python
+   ```python[demo]
        def create_checkpoint(
            self,
            dag_name: str,
@@ -1117,7 +1117,7 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
    ```
 
 3. Add save method:
-   ```python
+   ```python[demo]
        def save(self, checkpoint: Checkpoint) -> Path:
            """
            Save checkpoint to disk.
@@ -1138,7 +1138,7 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
    ```
 
 4. Add load methods:
-   ```python
+   ```python[demo]
        def load(self, checkpoint_id: str) -> Optional[Checkpoint]:
            """Load checkpoint by ID."""
            file_path = self.checkpoint_dir / f"{checkpoint_id}.json"
@@ -1179,7 +1179,7 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
    ```
 
 5. Add resume helper:
-   ```python
+   ```python[demo]
        def get_resume_point(self, checkpoint: Optional[Checkpoint]) -> Set[str]:
            """
            Extract set of nodes to skip on resume.
@@ -1197,7 +1197,7 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
    ```
 
 6. Add cleanup method:
-   ```python
+   ```python[demo]
        def cleanup(self, dag_name: str, keep_latest: int = 5) -> int:
            """
            Delete old checkpoints, keeping only latest N.
@@ -1278,7 +1278,7 @@ ScheduleManager orchestrates **when** pipelines run. Before implementing schedul
 1. Create file: `odibi_core/scheduler/schedule_manager.py`
 
 2. Add imports and enums:
-   ```python
+   ```python[demo]
    """
    Schedule manager for pipeline execution timing.
    
@@ -1309,7 +1309,7 @@ ScheduleManager orchestrates **when** pipelines run. Before implementing schedul
    ```
 
 3. Add Schedule dataclass:
-   ```python
+   ```python[demo]
    @dataclass
    class Schedule:
        """
@@ -1359,7 +1359,7 @@ ScheduleManager needs to calculate **when** to run schedules and dispatch execut
 **What to Do**
 
 1. Add ScheduleManager class:
-   ```python
+   ```python[demo]
    class ScheduleManager:
        """
        Manages pipeline execution schedules.
@@ -1384,7 +1384,7 @@ ScheduleManager needs to calculate **when** to run schedules and dispatch execut
    ```
 
 2. Add schedule registration methods:
-   ```python
+   ```python[demo]
        def schedule_interval(
            self,
            seconds: int,
@@ -1455,7 +1455,7 @@ ScheduleManager needs to calculate **when** to run schedules and dispatch execut
    ```
 
 3. Add execution logic:
-   ```python
+   ```python[demo]
        def _check_and_run(self) -> None:
            """Check schedules and execute if due."""
            now = datetime.now()
@@ -1502,7 +1502,7 @@ ScheduleManager needs a background thread that continuously checks and runs sche
 **What to Do**
 
 1. Add start/stop methods:
-   ```python
+   ```python[demo]
        def start(self, daemon: bool = True) -> None:
            """
            Start scheduling loop in background thread.
@@ -1537,7 +1537,7 @@ ScheduleManager needs a background thread that continuously checks and runs sche
    ```
 
 2. Add control methods:
-   ```python
+   ```python[demo]
        def enable_schedule(self, name: str) -> None:
            """Enable a schedule."""
            if name in self.schedules:
@@ -1558,7 +1558,7 @@ ScheduleManager needs a background thread that continuously checks and runs sche
    ```
 
 3. Add status method:
-   ```python
+   ```python[demo]
        def get_status(self) -> Dict[str, Any]:
            """Get status of all schedules."""
            return {
@@ -1633,7 +1633,7 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
 **What to Do**
 
 1. Add ExecutionMode enum to `core/orchestrator.py`:
-   ```python
+   ```python[demo]
    class ExecutionMode(str, Enum):
        """DAG execution modes."""
        BATCH = "batch"       # One-shot execution
@@ -1642,7 +1642,7 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
    ```
 
 2. Update DAGExecutor constructor:
-   ```python
+   ```python[demo]
    class DAGExecutor:
        def __init__(
            self,
@@ -1662,7 +1662,7 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
    ```
 
 3. Add run_continuous method:
-   ```python
+   ```python[demo]
        def run_continuous(
            self,
            stream_manager: Any,  # StreamManager
@@ -1736,7 +1736,7 @@ Tracker needs to record which **iteration** and **checkpoint** each step executi
 **What to Do**
 
 1. Update StepExecution dataclass in `core/tracker.py`:
-   ```python
+   ```python[demo]
    @dataclass
    class StepExecution:
        """Record of a single step's execution."""
@@ -1756,7 +1756,7 @@ Tracker needs to record which **iteration** and **checkpoint** each step executi
    ```
 
 2. Update to_dict method:
-   ```python
+   ```python[demo]
    # In StepExecution.to_dict(), add new fields to returned dict:
    
    def to_dict(self) -> Dict[str, Any]:
@@ -1800,7 +1800,7 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
 1. Create file: `tests/test_streaming_checkpointing.py`
 
 2. Add imports and fixtures:
-   ```python
+   ```python[demo]
    """
    Tests for streaming, checkpointing, and scheduling (Phase 6).
    """
@@ -1839,7 +1839,7 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
    ```
 
 3. Add StreamManager tests:
-   ```python
+   ```python[demo]
    class TestStreamManager:
        """Test StreamManager functionality."""
        
@@ -1884,7 +1884,7 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
    ```
 
 4. Add CheckpointManager tests:
-   ```python
+   ```python[demo]
    class TestCheckpointManager:
        """Test CheckpointManager functionality."""
        
@@ -1940,7 +1940,7 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
    ```
 
 5. Add ScheduleManager tests:
-   ```python
+   ```python[demo]
    class TestScheduleManager:
        """Test ScheduleManager functionality."""
        
@@ -1981,7 +1981,7 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
    ```
 
 6. Add DAGExecutor streaming tests:
-   ```python
+   ```python[demo]
    class TestDAGExecutorStreaming:
        """Test DAGExecutor streaming and resume modes."""
        
@@ -2048,7 +2048,7 @@ A comprehensive demo shows how all pieces integrate: streaming sources + DAG exe
 1. Create file: `odibi_core/examples/run_streaming_demo.py`
 
 2. Add demo implementation:
-   ```python
+   ```python[demo]
    """
    Streaming DAG execution demo with checkpoint/resume support.
    

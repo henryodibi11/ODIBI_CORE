@@ -221,10 +221,11 @@ class WalkthroughParser:
             # Extract code blocks with engine awareness
             code_blocks = self._extract_code_blocks(body)
             
-            # Separate by engine
-            pandas_blocks = [b for b in code_blocks if b['engine'] == 'pandas']
-            spark_blocks = [b for b in code_blocks if b['engine'] == 'spark']
-            generic_python_blocks = [b for b in code_blocks if b['engine'] is None and b['language'] in ['python', 'py']]
+            # Separate by type
+            pandas_blocks = [b for b in code_blocks if b.get('engine') == 'pandas']
+            spark_blocks = [b for b in code_blocks if b.get('engine') == 'spark']
+            runnable_blocks = [b for b in code_blocks if b.get('is_runnable', False)]
+            demo_blocks = [b for b in code_blocks if b.get('is_demo', False)]
             
             # Determine primary code and engine
             code = None
@@ -235,34 +236,36 @@ class WalkthroughParser:
             is_runnable = False
             
             if pandas_blocks:
-                # Pandas-specific code
+                # Pandas-specific runnable code
                 code_pandas = pandas_blocks[0]['code']
                 code = code_pandas
                 language = 'python'
                 engine = 'pandas'
-                is_runnable = True
+                is_runnable = pandas_blocks[0].get('is_runnable', True)
             
             if spark_blocks:
-                # Spark-specific code
+                # Spark-specific runnable code
                 code_spark = spark_blocks[0]['code']
                 if code is None:
                     code = code_spark
                     language = 'python'
                     engine = 'spark'
-                is_runnable = True
+                is_runnable = spark_blocks[0].get('is_runnable', True)
             
-            if not code and generic_python_blocks:
-                # Generic Python (default to pandas)
-                code = generic_python_blocks[0]['code']
-                language = 'python'
-                engine = 'pandas'
+            if not code and runnable_blocks:
+                # Other runnable code (tagged with [run])
+                first_runnable = runnable_blocks[0]
+                code = first_runnable['code']
+                language = first_runnable['language']
+                engine = first_runnable.get('engine', 'pandas')
                 is_runnable = True
             elif not code and code_blocks:
-                # Non-Python code
-                code = code_blocks[0]['code']
-                language = code_blocks[0]['language']
-                engine = None
-                is_runnable = False
+                # Non-runnable code (demos, bash, etc.)
+                first_block = code_blocks[0]
+                code = first_block['code']
+                language = first_block['language']
+                engine = first_block.get('engine')
+                is_runnable = first_block.get('is_runnable', False)
             
             # Extract related files from text
             related_files = re.findall(r'`([a-zA-Z0-9_/]+\.py)`', body)
@@ -306,36 +309,58 @@ class WalkthroughParser:
         Extract code blocks with engine awareness and teaching mode tags
         
         Supports:
-            ```python[pandas]
-            ```python[spark]
-            ```python[demo]   # Teaching example, not executable
-            ```python[skip]   # Skip validation
-            ```python
+            ```python[run]      # Explicitly runnable interactive code (pandas default)
+            ```python[pandas]   # Runnable with pandas engine
+            ```python[spark]    # Runnable with spark engine
+            ```python[demo]     # Teaching example, explicitly NOT executable
+            ```python[skip]     # Skip validation
+            ```python           # DEFAULT: Runnable (for backward compatibility)
             ```bash
+        
+        Note: Use [demo] tag to explicitly mark teaching fragments that shouldn't execute.
+        Untagged python blocks will show Run button but may fail if incomplete.
         """
         blocks = []
         
-        # Pattern for engine-aware code fences: ```python[engine]
+        # Pattern for engine-aware code fences: ```python[tag]
         engine_pattern = r'```(python|py)\[(\w+)\]\n(.*?)```'
         for match in re.finditer(engine_pattern, text, re.DOTALL):
             language = match.group(1)
             tag = match.group(2).lower()
             code = match.group(3).strip()
             
-            # Determine if this is a demo/skip block
-            is_demo = tag in ['demo', 'skip', 'example', 'teaching']
-            # Only set engine if explicitly pandas or spark (not for demo/skip)
-            engine = tag if tag in ['pandas', 'spark'] else None
+            # Determine block intent
+            if tag in ['demo', 'skip', 'example', 'teaching']:
+                # Explicitly marked as teaching demo
+                is_demo = True
+                is_runnable = False
+                engine = None
+            elif tag == 'run':
+                # Explicitly marked as runnable (default pandas)
+                is_demo = False
+                is_runnable = True
+                engine = 'pandas'
+            elif tag in ['pandas', 'spark']:
+                # Engine-specific runnable code
+                is_demo = False
+                is_runnable = True
+                engine = tag
+            else:
+                # Unknown tag - treat as demo
+                is_demo = True
+                is_runnable = False
+                engine = None
             
             blocks.append({
                 'language': language,
                 'is_demo': is_demo,
+                'is_runnable': is_runnable,
                 'engine': engine,
                 'code': code,
                 'position': match.start()
             })
         
-        # Pattern for regular code fences: ```python
+        # Pattern for regular code fences: ```python (no tag)
         regular_pattern = r'```(\w+)?\n(.*?)```'
         for match in re.finditer(regular_pattern, text, re.DOTALL):
             # Skip if already captured by engine pattern
@@ -345,8 +370,18 @@ class WalkthroughParser:
             language = match.group(1) or 'text'
             code = match.group(2).strip()
             
+            # DEFAULT BEHAVIOR: Untagged python blocks are runnable (original behavior)
+            if language in ['python', 'py']:
+                is_demo = False
+                is_runnable = True
+            else:
+                is_demo = False
+                is_runnable = False
+            
             blocks.append({
                 'language': language,
+                'is_demo': is_demo,
+                'is_runnable': is_runnable,
                 'engine': None,
                 'code': code,
                 'position': match.start()

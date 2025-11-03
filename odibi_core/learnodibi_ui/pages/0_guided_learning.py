@@ -82,11 +82,11 @@ def render_preflight_badge(preflight_result: dict, is_demo: bool = False):
     """Render pre-flight check badge with demo awareness"""
     if is_demo:
         st.markdown(f"""
-        <div style='background-color: {COLORS['warning']}; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block;'>
-            <span style='color: white; font-weight: bold;'>🧠 Teaching Example - Not Executed</span>
+        <div style='background-color: {COLORS['info']}; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block;'>
+            <span style='color: white; font-weight: bold;'>📖 Teaching Example</span>
         </div>
         """, unsafe_allow_html=True)
-        st.info("This is a demonstration block. It will be displayed but not executed.")
+        st.info("💡 **This is teaching content** showing code structure to create in your files. It's not meant to run interactively here. Use the Copy button to grab this code.")
     elif preflight_result['passed']:
         st.markdown(f"""
         <div style='background-color: {COLORS['success']}; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block;'>
@@ -392,20 +392,7 @@ def main():
         manifest_data = manifest_walkthroughs.get(selected_filename)
         if manifest_data:
             st.markdown("### 📊 Walkthrough Info")
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric("Total Steps", manifest_data.get('total_steps', 0))
-                st.metric("Code Blocks", manifest_data.get('code_blocks_total', 0))
-            with col2:
-                runnable = manifest_data.get('runnable_steps', 0)
-                total = manifest_data.get('total_steps', 1)
-                st.metric("Runnable", f"{runnable}/{total}")
-                
-                valid = manifest_data.get('code_blocks_valid', 0)
-                total_blocks = manifest_data.get('code_blocks_total', 1)
-                coverage = (valid / total_blocks * 100) if total_blocks > 0 else 100
-                st.metric("Code Valid", f"{coverage:.0f}%")
-            
+            st.metric("Total Steps", manifest_data.get('total_steps', 0))
             st.markdown("---")
         
         # Engine selector (sync with main app)

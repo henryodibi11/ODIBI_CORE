@@ -153,7 +153,7 @@ orchestrator.run()
 - Separates concerns (HTML helpers vs story logic)
 - Reusable for future visualizations
 
-```python
+```python[demo]
 """HTML rendering utilities for story generation."""
 
 from typing import Any, Dict, List, Optional
@@ -519,7 +519,7 @@ print(render_table(data))
 - Core of Phase 4 functionality
 - Used by Tracker.export_to_story()
 
-```python
+```python[demo]
 """
 HTML story generation for pipeline execution visualization.
 
@@ -857,7 +857,7 @@ print("Generated" if len(html) > 1000 else "Failed")
 
 **File: `odibi_core/story/explanation_loader.py`**
 
-```python
+```python[demo]
 """
 Step explanation loading from JSON/Markdown files.
 
@@ -956,7 +956,7 @@ class ExplanationLoader:
 
 **File: `odibi_core/tracker/tracker.py` (add method)**
 
-```python
+```python[demo]
 def export_to_story(
     self,
     explanations: Optional[Dict[str, Any]] = None,
@@ -985,7 +985,7 @@ def export_to_story(
 
 **File: `odibi_core/nodes/publish_node.py`**
 
-```python
+```python[demo]
 """
 Publishing node for API/database/file destinations.
 
@@ -1115,7 +1115,7 @@ class PublishNode(BaseNode):
 
 **File: `odibi_core/examples/run_showcase_demo.py`**
 
-```python
+```python[demo]
 """
 Showcase demo with explanations.
 

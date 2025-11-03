@@ -135,7 +135,7 @@ orchestrator.run()
 - Human-readable for debugging
 - Git-friendly (version control)
 
-```python
+```python[demo]
 """Configuration loader for pipeline definitions."""
 
 import json
@@ -200,7 +200,7 @@ class ConfigLoader:
 - Supports filtering (by project, enabled status)
 - Production-ready
 
-```python
+```python[demo]
 def _load_from_sqlite(
     self, db_path: str, project: str = None, enabled_only: bool = True
 ) -> List[Step]:
@@ -269,7 +269,7 @@ def _load_from_sqlite(
 
 **File: Create `ConfigValidator` class in `config_loader.py`**
 
-```python
+```python[demo]
 class ConfigValidationError(Exception):
     """Raised when config validation fails."""
     pass
@@ -356,7 +356,7 @@ SQL tables store complex data (dicts) as JSON strings. We parse them back to Pyt
 
 **The most complex validation:**
 
-```python
+```python[demo]
 def _validate_no_cycles(self, steps: List[Step]) -> None:
     """Detect circular dependencies using DFS."""
     # Build dependency graph
@@ -438,7 +438,7 @@ def _validate_no_cycles(self, steps: List[Step]) -> None:
 
 **Goal**: Capture DataFrame state at each step.
 
-```python
+```python[demo]
 def snapshot(self, name: str, df: Any, context: Any) -> None:
     """
     Capture snapshot of DataFrame state.
@@ -501,7 +501,7 @@ def snapshot(self, name: str, df: Any, context: Any) -> None:
 
 ### Mission 6: Implement Schema Diff Calculation
 
-```python
+```python[demo]
 def _compute_schema_diff(self, before: Snapshot, after: Snapshot) -> Dict[str, Any]:
     """Compute schema changes between snapshots."""
     before_cols = {col: dtype for col, dtype in before.schema}
@@ -566,7 +566,7 @@ Sample might only have 5 rows, but row_count shows the full DataFrame size (e.g.
 
 ### Mission 7: Implement Tracker Log Persistence
 
-```python
+```python[demo]
 def save(self, filepath: Optional[str] = None) -> str:
     """Save tracker logs to file."""
     # Create log directory
@@ -615,7 +615,7 @@ def export_lineage(self) -> Dict[str, Any]:
 
 **File: `odibi_core/nodes/ingest_node.py`**
 
-```python
+```python[demo]
 def run(self, data_map: Dict[str, Any]) -> Dict[str, Any]:
     """Execute ingest operation."""
     self._update_state(NodeState.RUNNING)
@@ -656,7 +656,7 @@ def run(self, data_map: Dict[str, Any]) -> Dict[str, Any]:
 > - Transforms them (SQL/function)
 > - Puts back on conveyor (data_map outputs)
 
-```python
+```python[demo]
 def run(self, data_map: Dict[str, Any]) -> Dict[str, Any]:
     """Execute transformation."""
     self._update_state(NodeState.RUNNING)
@@ -739,7 +739,7 @@ After inputs are loaded but before the transformation executes (captures the inp
 
 ### Mission 10: Implement StoreNode
 
-```python
+```python[demo]
 def run(self, data_map: Dict[str, Any]) -> Dict[str, Any]:
     """Execute store operation."""
     self._update_state(NodeState.RUNNING)
@@ -784,7 +784,7 @@ def run(self, data_map: Dict[str, Any]) -> Dict[str, Any]:
 
 **File: Update `odibi_core/core/orchestrator.py`**
 
-```python
+```python[demo]
 def run(self) -> OrchestrationResult:
     """Execute pipeline."""
     # Start pipeline tracking
@@ -965,7 +965,7 @@ print(f"Logs saved to: {log_path}")
 
 **File: `tests/test_config_loader.py`**
 
-```python
+```python[demo]
 def test_config_loader_json(tmp_path):
     """Test loading from JSON."""
     config = [

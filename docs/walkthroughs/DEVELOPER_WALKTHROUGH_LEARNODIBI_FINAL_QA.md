@@ -160,7 +160,7 @@ User code → AST parser → Syntax check → Pass/Fail badge
 
 **Example**:
 
-```python
+```python[demo]
 # Valid code
 code = "print('Hello')"
 preflight = executor.preflight_check(code)
@@ -200,7 +200,7 @@ preflight = executor.preflight_check(code)
 **Solution**: Isolated namespaces per engine
 
 **Pandas Namespace**:
-```python
+```python[demo]
 {
     'pd': <module 'pandas'>,
     'np': <module 'numpy'>,
@@ -210,7 +210,7 @@ preflight = executor.preflight_check(code)
 ```
 
 **Spark Namespace**:
-```python
+```python[demo]
 {
     'pd': <module 'pandas'>,
     'np': <module 'numpy'>,
@@ -222,7 +222,7 @@ preflight = executor.preflight_check(code)
 
 **Switching Engines**:
 
-```python
+```python[demo]
 # Student selects Spark in sidebar
 executor.set_engine("spark")
 
@@ -433,7 +433,7 @@ step = WalkthroughStep(
 
 **Method**:
 
-```python
+```python[demo]
 def get_step_code_for_engine(self, step: WalkthroughStep, engine: str) -> Optional[str]:
     engine = engine.lower()
     
@@ -458,7 +458,7 @@ def get_step_code_for_engine(self, step: WalkthroughStep, engine: str) -> Option
 
 **Usage in UI**:
 
-```python
+```python[demo]
 # Student has selected "pandas" in sidebar
 current_engine = st.session_state.selected_engine  # "pandas"
 
@@ -534,7 +534,7 @@ def render_step_content(step, parser):
 
 **Function**:
 
-```python
+```python[demo]
 def render_preflight_badge(preflight_result: dict):
     if preflight_result['passed']:
         st.markdown(f"""
@@ -582,7 +582,7 @@ df = pd.DataFrame({'a': [1, 2, 3]})
 
 **Usage**:
 
-```python
+```python[demo]
 # On successful execution
 if result['success']:
     st.toast("Execution complete ✅", icon="🎯")
@@ -635,7 +635,7 @@ FileNotFoundError: [Errno 2] No such file or directory: 'data.csv'
 
 **Code**:
 
-```python
+```python[demo]
 if not result['success']:
     st.toast("Error detected ❌", icon="⚠️")
     
@@ -728,7 +728,7 @@ Traceback:
 
 **Session State Variables**:
 
-```python
+```python[demo]
 # In 0_guided_learning.py
 if 'current_walkthrough' not in st.session_state:
     st.session_state.current_walkthrough = None
@@ -754,7 +754,7 @@ if 'selected_engine' not in st.session_state:
 
 **Example**:
 
-```python
+```python[demo]
 # Student executes: x = 42
 executor.execute("x = 42")  # Stores in global_namespace
 
@@ -775,7 +775,7 @@ executor.execute("print(x)")  # ❌ NameError (namespace cleared)
 ### Mission 15: Security Safeguards
 
 **1. No eval() without validation**:
-```python
+```python[demo]
 # NEVER do this:
 result = eval(user_code)  # ❌ Dangerous!
 
@@ -786,7 +786,7 @@ if preflight.passed:
 ```
 
 **2. Isolated namespaces**:
-```python
+```python[demo]
 # Each execution gets a COPY of global namespace
 exec_namespace = self.global_namespace.copy()
 exec(code, exec_namespace)
@@ -795,7 +795,7 @@ exec(code, exec_namespace)
 ```
 
 **3. Error sanitization**:
-```python
+```python[demo]
 # Log entry sanitization
 log_entry = {
     'code_snippet': code[:100] + '...',  # Truncate (prevent logging secrets)
@@ -804,7 +804,7 @@ log_entry = {
 ```
 
 **4. No secrets in UI**:
-```python
+```python[demo]
 # Don't expose internal details to students
 st.error(f"Error: {e}")  # ✅ Simple message
 # NOT: st.error(traceback.format_exc())  # ❌ Exposes internals
@@ -819,7 +819,7 @@ st.error(f"Error: {e}")  # ✅ Simple message
 **Solutions**:
 
 **1. Pre-flight AST parsing**:
-```python
+```python[demo]
 try:
     ast.parse(code)  # Syntax check BEFORE exec()
 except SyntaxError as e:
@@ -827,7 +827,7 @@ except SyntaxError as e:
 ```
 
 **2. Try/except around ALL exec() calls**:
-```python
+```python[demo]
 try:
     exec(code, namespace)
 except Exception as e:
@@ -844,7 +844,7 @@ except ImportError:
 ```
 
 **4. UTF-8 encoding**:
-```python
+```python[demo]
 with open(filepath, 'r', encoding='utf-8') as f:
     content = f.read()  # Handle Unicode symbols (°, ×, etc.)
 ```
@@ -859,7 +859,7 @@ with open(filepath, 'r', encoding='utf-8') as f:
 
 **Tests**:
 
-```python
+```python[demo]
 # Test 1: Branding Check
 files_to_check = [
     "odibi_core/learnodibi_ui/app.py",
@@ -975,7 +975,7 @@ df.show()
 #### Step 18.3: Test Parser Integration
 
 **Test that the parser can read your new walkthrough**:
-```python
+```python[demo]
 from odibi_core.learnodibi_ui.walkthrough_parser import get_walkthrough_parser
 from pathlib import Path
 
@@ -1022,7 +1022,7 @@ python -m streamlit run odibi_core/learnodibi_ui/app.py
 #### Step 19.1: Implement the Function
 
 **Add function to ODIBI CORE**:
-```python
+```python[demo]
 # In odibi_core/functions/data_ops.py
 
 def my_new_function(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -1052,7 +1052,7 @@ def my_new_function(df: pd.DataFrame, column: str) -> pd.DataFrame:
 #### Step 19.2: Write Unit Tests
 
 **Create tests in** `tests/test_functions_data_ops.py`:
-```python
+```python[demo]
 import pytest
 import pandas as pd
 from odibi_core.functions.data_ops import my_new_function

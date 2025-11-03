@@ -318,7 +318,7 @@ ls odibi_core/core/
 **File**: `odibi_core/core/dag_builder.py`
 
 **Step 2.1**: Add imports and DAGNode dataclass
-```python
+```python[demo]
 """
 DAG builder for dependency-aware pipeline execution.
 
@@ -367,7 +367,7 @@ class DAGNode:
 ```
 
 **Step 2.2**: Add DAGBuilder class skeleton
-```python
+```python[demo]
 class DAGBuilder:
     """
     Builds a directed acyclic graph (DAG) from pipeline steps.
@@ -409,7 +409,7 @@ class DAGBuilder:
 ```
 
 **Checkpoint ✅**: Test basic structure
-```python
+```python[demo]
 from odibi_core.core.dag_builder import DAGBuilder, DAGNode
 from odibi_core.core import Step
 
@@ -427,7 +427,7 @@ print(f"Builder created with {len(builder.steps)} steps")
 **Goal**: Parse step inputs/outputs to build dependency graph
 
 **Step 3.1**: Add build method
-```python
+```python[demo]
     def build(self) -> Dict[str, DAGNode]:
         """
         Build DAG from steps.
@@ -479,7 +479,7 @@ print(f"Builder created with {len(builder.steps)} steps")
 ```
 
 **Step 3.2**: Add dependency helper methods
-```python
+```python[demo]
     def get_execution_order(self) -> List[str]:
         """
         Get topological execution order (linear).
@@ -535,7 +535,7 @@ print(f"Builder created with {len(builder.steps)} steps")
 ```
 
 **Checkpoint ✅**: Test dependency parsing
-```python
+```python[demo]
 from odibi_core.core import Step
 from odibi_core.core.dag_builder import DAGBuilder
 
@@ -564,7 +564,7 @@ print(f"Dependencies: {dag['clean'].dependencies}")
 **Goal**: Implement DFS-based cycle detection
 
 **Step 4.1**: Add cycle detection method
-```python
+```python[demo]
     def _is_acyclic(self) -> bool:
         """
         Check if graph is acyclic using DFS.
@@ -603,7 +603,7 @@ print(f"Dependencies: {dag['clean'].dependencies}")
 ```
 
 **Step 4.2**: Add level computation
-```python
+```python[demo]
     def _compute_levels(self) -> None:
         """
         Compute topological level for each node.
@@ -632,7 +632,7 @@ print(f"Dependencies: {dag['clean'].dependencies}")
 ```
 
 **Checkpoint ✅**: Test cycle detection
-```python
+```python[demo]
 from odibi_core.core import Step
 from odibi_core.core.dag_builder import DAGBuilder
 
@@ -662,7 +662,7 @@ except ValueError as e:
 **Goal**: Add text and Mermaid visualization
 
 **Step 5.1**: Add visualization methods
-```python
+```python[demo]
     def visualize(self) -> str:
         """
         Generate text representation of DAG.
@@ -712,7 +712,7 @@ except ValueError as e:
 ```
 
 **Checkpoint ✅**: Test visualization
-```python
+```python[demo]
 from odibi_core.core import Step
 from odibi_core.core.dag_builder import DAGBuilder
 
@@ -831,7 +831,7 @@ class CacheManager:
 ```
 
 **Step 6.2**: Add cache key computation
-```python
+```python[demo]
     def compute_cache_key(
         self,
         step_name: str,
@@ -872,7 +872,7 @@ class CacheManager:
 ```
 
 **Checkpoint ✅**: Test cache key computation
-```python
+```python[demo]
 from odibi_core.core.cache_manager import CacheManager
 
 cache = CacheManager(enabled=True)
@@ -892,7 +892,7 @@ print(f"Different params: {key1 == key3}")  # Should be False
 **Goal**: Implement pickle-based storage
 
 **Step 7.1**: Add get/put methods
-```python
+```python[demo]
     def get(self, key: str, engine: str) -> Optional[Any]:
         """
         Retrieve cached data.
@@ -971,7 +971,7 @@ print(f"Different params: {key1 == key3}")  # Should be False
 ```
 
 **Step 7.2**: Add stats and invalidation
-```python
+```python[demo]
     def get_stats(self) -> Dict[str, Any]:
         """
         Get cache statistics.
@@ -1030,7 +1030,7 @@ print(f"Different params: {key1 == key3}")  # Should be False
 ```
 
 **Checkpoint ✅**: Test cache storage
-```python
+```python[demo]
 import pandas as pd
 from odibi_core.core.cache_manager import CacheManager
 
@@ -1125,7 +1125,7 @@ class NodeContext:
 ```
 
 **Step 8.2**: Add view management methods
-```python
+```python[demo]
     def register_temp(self, view_name: str, data: Any) -> str:
         """
         Register temp view with unique name.
@@ -1189,7 +1189,7 @@ class NodeContext:
 ```
 
 **Checkpoint ✅**: Test NodeContext
-```python
+```python[demo]
 from odibi_core.core.node_context import NodeContext
 
 # Test without Spark (pandas mode)
@@ -1216,7 +1216,7 @@ with ctx as c:
 **File**: `odibi_core/core/dag_executor.py`
 
 **Step 9.1**: Add imports and result dataclass
-```python
+```python[demo]
 """
 DAG executor for parallel pipeline execution.
 
@@ -1269,7 +1269,7 @@ class NodeExecutionResult:
 ```
 
 **Step 9.2**: Add DAGExecutor class skeleton
-```python
+```python[demo]
 class DAGExecutor:
     """
     Executes DAG in parallel with dependency resolution.
@@ -1346,7 +1346,7 @@ class DAGExecutor:
 ```
 
 **Checkpoint ✅**: Test DAGExecutor structure
-```python
+```python[demo]
 from odibi_core.core import Step, DAGBuilder, DAGExecutor, create_engine_context, Tracker, EventEmitter
 
 steps = [
@@ -1375,7 +1375,7 @@ print(f"✅ DAGExecutor created with {len(executor.dag)} nodes")
 **Goal**: Implement parallel execution with dependency resolution
 
 **Step 10.1**: Add execute method
-```python
+```python[demo]
     def execute(self) -> Dict[str, Any]:
         """
         Execute DAG in parallel.
@@ -1435,7 +1435,7 @@ print(f"✅ DAGExecutor created with {len(executor.dag)} nodes")
 ```
 
 **Step 10.2**: Add dependency waiting
-```python
+```python[demo]
     def _wait_for_dependencies(self, node: DAGNode) -> None:
         """
         Wait for all dependencies to complete.
@@ -1461,7 +1461,7 @@ print(f"✅ DAGExecutor created with {len(executor.dag)} nodes")
 ```
 
 **Checkpoint ✅**: Test parallel execution structure
-```python
+```python[demo]
 from odibi_core.core import Step, DAGBuilder, DAGExecutor, create_engine_context, Tracker, EventEmitter
 
 steps = [
@@ -1489,7 +1489,7 @@ print(f"Level 1: {[n.name for n in batches[1]]}")  # Should be ['B', 'C']
 **Goal**: Implement node execution with retry logic
 
 **Step 11.1**: Add _execute_node method
-```python
+```python[demo]
     def _execute_node(self, node: DAGNode) -> NodeExecutionResult:
         """
         Execute a single node with retry logic.
@@ -1564,7 +1564,7 @@ print(f"Level 1: {[n.name for n in batches[1]]}")  # Should be ['B', 'C']
 ```
 
 **Step 11.2**: Add _run_node method
-```python
+```python[demo]
     def _run_node(self, node: DAGNode) -> Any:
         """
         Run a single node's computation.
@@ -1612,7 +1612,7 @@ print(f"Level 1: {[n.name for n in batches[1]]}")  # Should be ['B', 'C']
 ```
 
 **Checkpoint ✅**: Test node execution
-```python
+```python[demo]
 # This would require full pipeline setup
 # For now, verify structure is correct
 from odibi_core.core.dag_executor import NodeExecutionResult
@@ -1635,7 +1635,7 @@ print(f"✅ NodeExecutionResult structure: {result}")
 **Goal**: Integrate CacheManager with node execution
 
 **Step 12.1**: Add cache-aware execution
-```python
+```python[demo]
     def _execute_node(self, node: DAGNode) -> NodeExecutionResult:
         """
         Execute a single node with cache and retry logic.
@@ -1753,7 +1753,7 @@ print(f"✅ NodeExecutionResult structure: {result}")
 ```
 
 **Step 12.2**: Add stats method
-```python
+```python[demo]
     def get_stats(self) -> Dict[str, Any]:
         """Get execution statistics."""
         total_duration = sum(r.duration_ms for r in self._results)
@@ -1783,7 +1783,7 @@ print(f"✅ NodeExecutionResult structure: {result}")
 **File**: `odibi_core/core/orchestrator.py`
 
 **Step 13.1**: Add DAG imports and modify __init__
-```python
+```python[demo]
 # At top of file, add:
 from odibi_core.core.dag_builder import DAGBuilder
 from odibi_core.core.dag_executor import DAGExecutor
@@ -1821,7 +1821,7 @@ def __init__(
 ```
 
 **Step 13.2**: Modify run method
-```python
+```python[demo]
 def run(self) -> OrchestrationResult:
     """
     Run pipeline in sequential or parallel mode.
@@ -1871,7 +1871,7 @@ def run(self) -> OrchestrationResult:
 ```
 
 **Checkpoint ✅**: Test both modes
-```python
+```python[demo]
 from odibi_core.core import Orchestrator, ConfigLoader, create_engine_context, Tracker, EventEmitter
 
 loader = ConfigLoader()
@@ -1902,7 +1902,7 @@ print(f"Parallel: {result_par.duration_ms}ms, cache hits: {result_par.stats.get(
 **File**: `odibi_core/core/__init__.py`
 
 **Step 14.1**: Add exports
-```python
+```python[demo]
 # Add imports:
 from odibi_core.core.dag_builder import DAGBuilder, DAGNode
 from odibi_core.core.dag_executor import DAGExecutor, NodeExecutionResult
@@ -1922,7 +1922,7 @@ __all__ = [
 ```
 
 **Checkpoint ✅**: Test imports
-```python
+```python[demo]
 from odibi_core.core import (
     DAGBuilder, DAGNode, DAGExecutor, NodeExecutionResult,
     CacheManager, NodeContext
@@ -1940,7 +1940,7 @@ print("✅ All Phase 5 classes imported successfully")
 **File**: `tests/test_phase5_integration.py`
 
 **Step 15.1**: Create test file
-```python
+```python[demo]
 """
 Integration tests for Phase 5 (DAG execution & optimization).
 """

@@ -455,7 +455,7 @@ class CloudAdapter:
 ```
 
 **Checkpoint ✅**: Test imports
-```python
+```python[demo]
 python -c "from odibi_core.cloud.cloud_adapter import CloudAdapter, CloudAdapterBase; print('✅ CloudAdapter base imported')"
 ```
 
@@ -467,7 +467,7 @@ python -c "from odibi_core.cloud.cloud_adapter import CloudAdapter, CloudAdapter
 
 **File**: `odibi_core/cloud/azure_adapter.py`
 
-```python
+```python[demo]
 """
 Azure Blob Storage / ADLS Gen2 Adapter
 
@@ -771,7 +771,7 @@ CloudAdapter.register("azure", AzureAdapter)
 
 **Update `odibi_core/cloud/__init__.py`**:
 
-```python
+```python[demo]
 """Cloud adapters for Azure, S3, HDFS, Kafka"""
 
 from .cloud_adapter import CloudAdapter, CloudAdapterBase, CloudBackend
@@ -781,7 +781,7 @@ __all__ = ["CloudAdapter", "CloudAdapterBase", "CloudBackend", "AzureAdapter"]
 ```
 
 **Checkpoint ✅**: Test Azure adapter import
-```python
+```python[demo]
 python -c "from odibi_core.cloud import CloudAdapter; adapter = CloudAdapter.create('azure', account_name='test', simulate=True); adapter.connect(); print('✅ AzureAdapter created')"
 ```
 
@@ -976,7 +976,7 @@ class MetricsManager:
 
 **Update `odibi_core/metrics/__init__.py`**:
 
-```python
+```python[demo]
 """Metrics collection and reporting"""
 
 from .metrics_manager import MetricsManager, MetricType
@@ -985,7 +985,7 @@ __all__ = ["MetricsManager", "MetricType"]
 ```
 
 **Checkpoint ✅**: Test metrics
-```python
+```python[demo]
 python -c "from odibi_core.metrics import MetricsManager; m = MetricsManager(); m.increment('test'); print('✅ MetricsManager works, counter=', m.get_counter('test'))"
 ```
 
@@ -997,7 +997,7 @@ python -c "from odibi_core.metrics import MetricsManager; m = MetricsManager(); 
 
 **File**: `odibi_core/cache/cloud_cache_manager.py`
 
-```python
+```python[demo]
 """
 Cloud Cache Manager (Phase 7)
 
@@ -1217,7 +1217,7 @@ class CloudCacheManager:
 
 **Update `odibi_core/cache/__init__.py`**:
 
-```python
+```python[demo]
 """Cloud caching with TTL expiry"""
 
 from .cloud_cache_manager import CloudCacheManager
@@ -1226,7 +1226,7 @@ __all__ = ["CloudCacheManager"]
 ```
 
 **Checkpoint ✅**: Test cache
-```python
+```python[demo]
 python -c "
 from odibi_core.cloud import CloudAdapter
 from odibi_core.cache import CloudCacheManager
@@ -1247,7 +1247,7 @@ print('✅ CloudCacheManager works, key=', key[:8], '...')
 
 **File**: `odibi_core/checkpoint/distributed_checkpoint_manager.py`
 
-```python
+```python[demo]
 """
 Distributed Checkpoint Manager (Phase 7)
 
@@ -1434,7 +1434,7 @@ class DistributedCheckpointManager(CheckpointManager):
 ```
 
 **Checkpoint ✅**: Test distributed checkpoint manager
-```python
+```python[demo]
 python -c "
 from odibi_core.cloud import CloudAdapter
 from odibi_core.checkpoint.distributed_checkpoint_manager import DistributedCheckpointManager
@@ -1454,7 +1454,7 @@ print('✅ DistributedCheckpointManager created')
 
 **File**: `odibi_core/examples/run_cloud_demo.py`
 
-```python
+```python[demo]
 """
 Phase 7 Cloud Demo Script
 
@@ -1601,7 +1601,7 @@ python odibi_core/examples/run_cloud_demo.py
 
 **File**: `tests/test_phase7_cloud.py`
 
-```python
+```python[demo]
 """
 Phase 7 Cloud Tests
 

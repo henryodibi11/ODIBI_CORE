@@ -139,7 +139,7 @@ Before writing code, let's understand the **parity problem**. This is the heart 
 
 **Question**: How do we make this code work on both Pandas and Spark?
 
-```python
+```python[demo]
 # User writes this once:
 ctx.read("data.csv")
 ctx.execute_sql("SELECT * FROM data WHERE value > 100")
@@ -206,7 +206,7 @@ def get_local_spark_config(
 ```
 
 **What this enables:**
-```python
+```python[demo]
 # Later, in SparkEngineContext:
 self.spark_config = spark_config or DEFAULT_SPARK_CONFIG.copy()
 ```
@@ -233,7 +233,7 @@ Pandas is like learning to ride a bike before trying a motorcycle. It's simpler 
 - Validates the EngineContext contract
 - Enables local testing immediately
 
-```python
+```python[demo]
 """Pandas engine context implementation."""
 
 import logging
@@ -273,7 +273,7 @@ class PandasEngineContext(EngineContext):
 
 Now we're connecting to DuckDB—think of it as plugging in the "SQL brain" for Pandas. DuckDB is like having a tiny, lightning-fast database that lives in your computer's memory.
 
-```python
+```python[demo]
 def connect(self, **kwargs: Any) -> "PandasEngineContext":
     """Establish connection (initializes DuckDB)."""
     try:
@@ -394,7 +394,7 @@ This is where PandasEngineContext becomes truly powerful. We're building the **S
 
 **The SQL triad: execute_sql + register_temp + temp_tables**
 
-```python
+```python[demo]
 def register_temp(self, name: str, df: Any) -> None:
     """Register DataFrame as temporary table for SQL queries."""
     try:
@@ -534,7 +534,7 @@ Now we step up to the big leagues! Spark is like upgrading from a car to a freig
 - Can copy structure from Pandas implementation
 - Validates that contract works for both engines
 
-```python
+```python[demo]
 """Spark engine context implementation."""
 
 import logging
@@ -567,7 +567,7 @@ class SparkEngineContext(EngineContext):
 
 **Connect method:**
 
-```python
+```python[demo]
 def connect(self, **kwargs: Any) -> "SparkEngineContext":
     """Initialize SparkSession."""
     try:
@@ -683,7 +683,7 @@ def write(self, df: Any, target: str, **kwargs: Any) -> None:
 
 The final pieces! Spark SQL is built-in, making this simpler than the DuckDB integration in Pandas.
 
-```python
+```python[demo]
 def register_temp(self, name: str, df: Any) -> None:
     """Register DataFrame as temporary view for SQL queries."""
     from pyspark.sql import DataFrame
@@ -729,7 +729,7 @@ def stop(self) -> None:
 ```
 
 **Critical insight on `collect_sample()`:**
-```python
+```python[demo]
 # ❌ WRONG (loads entire dataset into memory)
 df.toPandas().head(n)
 
@@ -769,7 +769,7 @@ Now we make it easy to switch between engines. The factory pattern is like a uni
 
 **Create: Update `odibi_core/engine/__init__.py`**
 
-```python
+```python[demo]
 from odibi_core.engine.base_context import EngineContext
 from odibi_core.engine.pandas_context import PandasEngineContext
 from odibi_core.engine.spark_context import SparkEngineContext
@@ -795,7 +795,7 @@ __all__ = [
 
 Here's how we prove both engines produce identical results:
 
-```python
+```python[demo]
 # 1. Read same file
 pandas_df = pandas_ctx.read("data.csv")
 spark_df = spark_ctx.read("data.csv")

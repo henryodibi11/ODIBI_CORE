@@ -59,6 +59,14 @@ logs/
 
 # OS
 .DS_Store
+
+# Development tools and reports (kept locally, not in repo)
+dev_tools/reports/*.json
+dev_tools/reports/*.txt
+dev_tools/reports/*.md
+*.log
+ui_error_log.json
+tracker_logs/
 Thumbs.db
 
 # Spark
