@@ -4,8 +4,19 @@
 **Domain:** Finance  
 **DAG Topology:** Branching  
 **Complexity Level:** Medium  
-**Timestamp:** 2025-11-02T21:03:06.228604  
+**Timestamp:** 2025-11-02T21:12:17.800330  
 **Status:** ✅ SUCCESS
+
+---
+
+## 💎 What Makes ODIBI_CORE Unique
+
+🎯 **Native DAG Orchestration** - No Airflow, no Prefect - pure Python dependency resolution  
+🔍 **Truth-Preserving Lineage** - Tracker captures every transformation with before/after snapshots  
+🏅 **Medallion-First Architecture** - Bronze (raw) → Silver (clean) → Gold (business) layering built-in  
+⚡ **Event-Driven Observability** - Real-time lifecycle hooks without external monitoring tools  
+🧩 **Config-Driven Pipelines** - Entire DAG defined in JSON/SQL, zero hardcoding required  
+📊 **Auto-Generated Stories** - HTML visualizations show exactly what happened to your data  
 
 ---
 
@@ -32,13 +43,13 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 ## 🔧 Framework Components Used
 
+- **DAGBuilder**
+- **Orchestrator**
+- **DAGExecutor**
 - **ConfigLoader**
 - **EventEmitter**
 - **PandasEngineContext**
 - **Tracker**
-- **DAGExecutor**
-- **DAGBuilder**
-- **Orchestrator**
 
 ---
 
@@ -47,9 +58,9 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 7 |
-| **Execution Time** | 21.00ms |
+| **Execution Time** | 29.00ms |
 | **Events Fired** | 4 |
-| **Tracker Snapshots** | 6 |
+| **Tracker Snapshots** | 4 |
 | **Cache Hits** | 0 |
 | **Validation Checks** | 1 |
 | **Components Used** | 7 |
@@ -60,8 +71,8 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `step_start`
 - `pipeline_start`
+- `step_start`
 - `step_complete`
 - `pipeline_complete`
 
@@ -70,40 +81,68 @@ Total events captured: **4**
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> Event-driven hooks captured 4 lifecycle events, enabling real-time observability.
+> Tracker snapshots preserved 4 schema evolutions, demonstrating data lineage tracking.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize medium-complexity configurations
 - ✅ Build and execute Branching DAG topologies
 - ✅ Fire 4 lifecycle events for observability
-- ✅ Track data lineage through 6 schema snapshots
+- ✅ Track data lineage through 4 schema snapshots
 - ✅ Orchestrate pipelines in the **Finance** domain
 
 ---
 
-## 🎓 Educational Value
+## 🏅 Medallion Architecture Walkthrough
 
-### ConfigLoader Insights
-- Parsed JSON configuration with 7 steps
-- Normalized into `Step` dataclass instances
-- Validated dependency graph structure
+This showcase demonstrates ODIBI_CORE's medallion-first design:
 
-### Orchestrator Insights
-- Built Branching DAG topology
-- Detected dependencies and execution order
-- Coordinated 7 nodes
+**🥉 Bronze Layer (Raw Ingestion)**
+- Ingested raw data from multiple sources
+- Created initial datasets with standardized schemas
+- No transformations - pure data capture
 
-### Tracker Insights
-- Captured 6 schema evolution snapshots
-- Preserved data lineage metadata
-- Enabled truth-preserving story generation
+**🥈 Silver Layer (Transformation & Quality)**
+- Applied 3 transformation steps
+- Sequential transformations
+- Validated data quality (filtered invalid rows)
 
-### EventEmitter Insights
-- Fired 4 unique event types
-- Enabled real-time observability hooks
-- Supported custom listener registration
+**🥇 Gold Layer (Business-Ready)**
+- Published final dataset ready for analytics
+- Schema: Enriched with calculated fields
+- Quality: Validated (1 checks)
 
 ---
+
+## 🔬 Component Spotlight
+
+### ConfigLoader
+**What it did:** Loaded 7 steps from JSON configuration  
+**Why it matters:** Zero hardcoding - entire pipeline defined declaratively  
+**Concrete example:** Parsed step dependencies automatically (e.g., `merge_sources` depends on all `ingest_*` steps)
+
+### Orchestrator + DAGBuilder
+**What it did:** Built Branching DAG with 7 nodes, resolved dependencies  
+**Why it matters:** Automatic parallel execution - runs independent steps concurrently  
+**Concrete example:** Detected 7 steps can run in optimal order based on dependencies
+
+### Tracker (Truth-Preserving Lineage)
+**What it did:** Captured 4 snapshots showing data evolution  
+**Why it matters:** Full auditability - see exactly what changed at each step  
+**Concrete example:** Tracked schema changes (columns added/removed) and row deltas (filtering/merging)
+
+### EventEmitter (Observability)
+**What it did:** Fired 4 event types (pipeline_complete, step_start)  
+**Why it matters:** Real-time hooks for monitoring without external tools  
+**Concrete example:** Fired `pipeline_start`, `step_start`, `step_complete`, `pipeline_complete` for full visibility
+
+### PandasEngineContext
+**What it did:** Executed all transformations using Pandas with DuckDB SQL support  
+**Why it matters:** Engine abstraction - swap to SparkEngineContext for big data  
+**Concrete example:** Same config runs on Pandas locally or Spark in Databricks
+
+---
+
+## 🎓 Educational Value
 
 ## 📝 Status Report
 

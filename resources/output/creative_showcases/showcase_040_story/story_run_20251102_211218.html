@@ -1,0 +1,765 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODIBI Pipeline Story - run_20251102_211218</title>
+    
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+        color: #333;
+    }
+    
+    .story-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    
+    .story-header h1 {
+        margin: 0 0 10px 0;
+    }
+    
+    .story-header .meta {
+        opacity: 0.9;
+        font-size: 14px;
+    }
+    
+    .step-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .step-card h2 {
+        margin-top: 0;
+        color: #667eea;
+    }
+    
+    .step-card .step-meta {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    
+    .step-card.success {
+        border-left: 4px solid #10b981;
+    }
+    
+    .step-card.failed {
+        border-left: 4px solid #ef4444;
+    }
+    
+    table.data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin: 15px 0;
+    }
+    
+    table.data-table th {
+        background: #f3f4f6;
+        text-align: left;
+        padding: 8px 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #e5e7eb;
+    }
+    
+    table.data-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    table.data-table tbody tr:hover {
+        background: #f9fafb;
+    }
+    
+    .schema-diff {
+        margin: 15px 0;
+    }
+    
+    .schema-diff ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .schema-diff li {
+        padding: 4px 0;
+        font-family: monospace;
+        font-size: 13px;
+    }
+    
+    .schema-diff li.added {
+        color: #10b981;
+    }
+    
+    .schema-diff li.removed {
+        color: #ef4444;
+    }
+    
+    .schema-diff li.changed {
+        color: #f59e0b;
+    }
+    
+    details {
+        margin: 15px 0;
+    }
+    
+    summary {
+        cursor: pointer;
+        padding: 10px;
+        background: #f3f4f6;
+        border-radius: 4px;
+        user-select: none;
+    }
+    
+    summary:hover {
+        background: #e5e7eb;
+    }
+    
+    .collapsible-content {
+        padding: 15px 10px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    .stat-card .value {
+        font-size: 32px;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .stat-card .label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+    }
+    
+    code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+    }
+    
+    pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    
+    .footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+        color: #666;
+        font-size: 12px;
+    }
+    
+    .explanation {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+    }
+    
+    .explanation p {
+        margin: 8px 0;
+        line-height: 1.6;
+    }
+    
+    .explanation ul, .explanation ol {
+        margin: 8px 0;
+        padding-left: 25px;
+        line-height: 1.6;
+    }
+    
+    .explanation li {
+        margin: 4px 0;
+    }
+    
+    .explanation code {
+        background: #fef9c3;
+        color: #78350f;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 0.9em;
+    }
+    
+    .explanation pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 0.85em;
+    }
+    
+    .explanation pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    
+    .explanation table {
+        width: 100%;
+        margin: 12px 0;
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+    
+    .explanation th {
+        background: #fde68a;
+        border: 1px solid #e5e7eb;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #92400e;
+    }
+    
+    .explanation td {
+        border: 1px solid #e5e7eb;
+        padding: 6px 12px;
+        background: white;
+    }
+    
+    .explanation tr:hover td {
+        background: #fffbeb;
+    }
+    
+    .explanation strong {
+        color: #92400e;
+        font-weight: 600;
+    }
+    
+    .explanation em {
+        color: #b45309;
+        font-style: italic;
+    }
+    
+    .explanation h4 {
+        color: #92400e;
+        margin: 15px 0 8px 0;
+        font-size: 1em;
+    }
+</style>
+
+</head>
+<body>
+
+
+<div class="story-header">
+    <h1>ODIBI CORE Pipeline Story</h1>
+    <div class="meta">
+        <strong>Pipeline ID:</strong> run_20251102_211218<br>
+        <strong>Start Time:</strong> 2025-11-02T21:12:18.055371<br>
+        <strong>Duration:</strong> 0.01s
+    </div>
+</div>
+
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">11</div>
+        <div class="label">Total Steps</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">11</div>
+        <div class="label">Success</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">0</div>
+        <div class="label">Failed</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">100.0%</div>
+        <div class="label">Success Rate</div>
+    </div>
+</div>
+
+<div class="step-card success">
+<h2>cache_9</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 50 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>46.431831645227675</td></tr><tr><td>2</td><td>29.92203297773259</td></tr><tr><td>3</td><td>77.18094108353677</td></tr><tr><td>4</td><td>49.76737906997034</td></tr><tr><td>5</td><td>88.13161648180696</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 50 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>46.431831645227675</td></tr><tr><td>2</td><td>29.92203297773259</td></tr><tr><td>3</td><td>77.18094108353677</td></tr><tr><td>4</td><td>49.76737906997034</td></tr><tr><td>5</td><td>88.13161648180696</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>error_injection_node</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 50 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>data</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>data</th></tr></thead><tbody><tr><td>1</td><td>sample</td></tr><tr><td>2</td><td>sample</td></tr><tr><td>3</td><td>sample</td></tr><tr><td>4</td><td>sample</td></tr><tr><td>5</td><td>sample</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 50 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>data</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>data</th></tr></thead><tbody><tr><td>1</td><td>sample</td></tr><tr><td>2</td><td>sample</td></tr><tr><td>3</td><td>sample</td></tr><tr><td>4</td><td>sample</td></tr><tr><td>5</td><td>sample</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_csv_1</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+</div>
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>timestamp</td><td>datetime64[ns]</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>category</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>timestamp</th><th>value</th><th>category</th></tr></thead><tbody><tr><td>1</td><td>2025-11-02 21:12:18.056374</td><td>93.0437462949574</td><td>A</td></tr><tr><td>2</td><td>2025-11-02 21:12:18.056374</td><td>97.11574390559022</td><td>C</td></tr><tr><td>3</td><td>2025-11-02 21:12:18.056374</td><td>48.32298088477944</td><td>A</td></tr><tr><td>4</td><td>2025-11-02 21:12:18.056374</td><td>59.937576544196745</td><td>A</td></tr><tr><td>5</td><td>2025-11-02 21:12:18.056374</td><td>5.760973371815126</td><td>B</td></tr></tbody></table>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_json_3</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+</div>
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>timestamp</td><td>datetime64[ns]</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>category</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>timestamp</th><th>value</th><th>category</th></tr></thead><tbody><tr><td>1</td><td>2025-11-02 21:12:18.057375</td><td>10.60017847910284</td><td>B</td></tr><tr><td>2</td><td>2025-11-02 21:12:18.057375</td><td>2.7429480704553755</td><td>C</td></tr><tr><td>3</td><td>2025-11-02 21:12:18.057375</td><td>78.3781025496581</td><td>B</td></tr><tr><td>4</td><td>2025-11-02 21:12:18.057375</td><td>33.12816036098914</td><td>A</td></tr><tr><td>5</td><td>2025-11-02 21:12:18.057375</td><td>83.68252112082654</td><td>A</td></tr></tbody></table>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_parquet_2</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+</div>
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>timestamp</td><td>datetime64[ns]</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>category</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>timestamp</th><th>value</th><th>category</th></tr></thead><tbody><tr><td>1</td><td>2025-11-02 21:12:18.057375</td><td>95.73973844189284</td><td>B</td></tr><tr><td>2</td><td>2025-11-02 21:12:18.057375</td><td>80.40497143717222</td><td>B</td></tr><tr><td>3</td><td>2025-11-02 21:12:18.057375</td><td>23.406607072939668</td><td>B</td></tr><tr><td>4</td><td>2025-11-02 21:12:18.057375</td><td>50.34708602798745</td><td>C</td></tr><tr><td>5</td><td>2025-11-02 21:12:18.057375</td><td>93.49781596218743</td><td>C</td></tr></tbody></table>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>merge_sources_4</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>1.0</td></tr><tr><td>2</td><td>1.0</td></tr><tr><td>3</td><td>1.0</td></tr><tr><td>4</td><td>1.0</td></tr><tr><td>5</td><td>1.0</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 3</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>merged_field</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th><th>merged_field</th></tr></thead><tbody><tr><td>1</td><td>1.0</td><td>X</td></tr><tr><td>2</td><td>1.0</td><td>Y</td></tr><tr><td>3</td><td>1.0</td><td>Y</td></tr><tr><td>4</td><td>1.0</td><td>Y</td></tr><tr><td>5</td><td>1.0</td><td>X</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ merged_field</li></ul></div></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>parallel_1_5</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>55.56286571964365</td></tr><tr><td>2</td><td>9.949845401715574</td></tr><tr><td>3</td><td>46.37337722471039</td></tr><tr><td>4</td><td>8.84954322583582</td></tr><tr><td>5</td><td>30.418621292819935</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>rounded</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th><th>calculated</th><th>rounded</th></tr></thead><tbody><tr><td>1</td><td>55.56286571964365</td><td>111.1257314392873</td><td>111.13</td></tr><tr><td>2</td><td>9.949845401715574</td><td>19.89969080343115</td><td>19.9</td></tr><tr><td>3</td><td>46.37337722471039</td><td>92.74675444942078</td><td>92.75</td></tr><tr><td>4</td><td>8.84954322583582</td><td>17.69908645167164</td><td>17.7</td></tr><tr><td>5</td><td>30.418621292819935</td><td>60.83724258563987</td><td>60.84</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ rounded</li></ul></div></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>parallel_2_6</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>45.60340544467866</td></tr><tr><td>2</td><td>31.51735904905133</td></tr><tr><td>3</td><td>43.1161932266401</td></tr><tr><td>4</td><td>42.73288592807655</td></tr><tr><td>5</td><td>36.71911322959023</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>rounded</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th><th>calculated</th><th>rounded</th></tr></thead><tbody><tr><td>1</td><td>45.60340544467866</td><td>91.20681088935731</td><td>91.21</td></tr><tr><td>2</td><td>31.51735904905133</td><td>63.03471809810266</td><td>63.03</td></tr><tr><td>3</td><td>43.1161932266401</td><td>86.2323864532802</td><td>86.23</td></tr><tr><td>4</td><td>42.73288592807655</td><td>85.4657718561531</td><td>85.47</td></tr><tr><td>5</td><td>36.71911322959023</td><td>73.43822645918046</td><td>73.44</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ rounded</li></ul></div></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>parallel_3_7</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>21.367672890842325</td></tr><tr><td>2</td><td>34.3539104315476</td></tr><tr><td>3</td><td>76.04391688897452</td></tr><tr><td>4</td><td>68.67256555449426</td></tr><tr><td>5</td><td>49.16254025454032</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>rounded</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th><th>calculated</th><th>rounded</th></tr></thead><tbody><tr><td>1</td><td>21.367672890842325</td><td>42.73534578168465</td><td>42.74</td></tr><tr><td>2</td><td>34.3539104315476</td><td>68.7078208630952</td><td>68.71</td></tr><tr><td>3</td><td>76.04391688897452</td><td>152.08783377794904</td><td>152.09</td></tr><tr><td>4</td><td>68.67256555449426</td><td>137.3451311089885</td><td>137.35</td></tr><tr><td>5</td><td>49.16254025454032</td><td>98.32508050908064</td><td>98.33</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ rounded</li></ul></div></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>publish_final_10</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 50 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>data</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>data</th></tr></thead><tbody><tr><td>1</td><td>sample</td></tr><tr><td>2</td><td>sample</td></tr><tr><td>3</td><td>sample</td></tr><tr><td>4</td><td>sample</td></tr><tr><td>5</td><td>sample</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 50 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>data</td><td>object</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>data</th></tr></thead><tbody><tr><td>1</td><td>sample</td></tr><tr><td>2</td><td>sample</td></tr><tr><td>3</td><td>sample</td></tr><tr><td>4</td><td>sample</td></tr><tr><td>5</td><td>sample</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>validate_8</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> -7
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>17.87030101685311</td></tr><tr><td>2</td><td>69.96842845607094</td></tr><tr><td>3</td><td>60.2162330527329</td></tr><tr><td>4</td><td>45.57488079989491</td></tr><tr><td>5</td><td>89.00255987559201</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 93 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>value</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>value</th></tr></thead><tbody><tr><td>1</td><td>17.87030101685311</td></tr><tr><td>2</td><td>69.96842845607094</td></tr><tr><td>3</td><td>60.2162330527329</td></tr><tr><td>4</td><td>45.57488079989491</td></tr><tr><td>5</td><td>89.00255987559201</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"></div>
+    </div>
+</details>
+
+</div>
+
+<div class="footer">
+    Generated by ODIBI CORE v1.0 Story Generator (Phase 5: DAG Execution)<br>
+    Framework: Node-centric, engine-agnostic, config-driven data engineering
+</div>
+
+</body></html>

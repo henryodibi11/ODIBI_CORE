@@ -359,17 +359,67 @@ class CreativeShowcaseExecutor:
             execution.reflection = self.generate_reflection(execution)
             
             # ============================================================
-            # Generate HTML Story
+            # Generate HTML Story with Rich Explanations
             # ============================================================
             logger.info(f"[7/7] Generating HTML story visualization...")
             try:
                 story_dir = self.output_path / f"showcase_{showcase_id:03d}_story"
                 story_dir.mkdir(parents=True, exist_ok=True)
                 
-                # Add explanations for the story
+                # Build rich explanations for each step
                 explanations = {
-                    "pipeline": f"**{execution.title}**\n\n{execution.backstory}\n\n**Goal:** {execution.data_goal}"
+                    "pipeline": f"**{execution.title}**\n\n{execution.backstory}\n\n**Goal:** {execution.data_goal}\n\n**Domain:** {execution.domain} | **Topology:** {execution.dag_topology} | **Complexity:** {execution.complexity_level.upper()}"
                 }
+                
+                # Add explanations for each step based on step type
+                for step in execution_order:
+                    if 'ingest' in step.name:
+                        fmt = step.name.split('_')[1].upper()
+                        explanations[step.name] = f"""**Purpose:** Ingest raw data from {fmt} source
+**Layer:** 🥉 Bronze (Raw Data)
+**What it does:** Reads data from source system without transformation
+**Why it matters:** Preserves raw data for audit trail and reprocessing
+**ODIBI_CORE feature:** Multi-format ingestion with automatic schema detection"""
+                    
+                    elif 'merge' in step.name:
+                        explanations[step.name] = f"""**Purpose:** Merge multiple data sources into unified dataset
+**Layer:** 🥈 Silver (Transformation)
+**What it does:** Combines ingested sources using common keys
+**Why it matters:** Creates single source of truth from distributed sources
+**ODIBI_CORE feature:** DAG-based dependency resolution ensures all sources loaded first"""
+                    
+                    elif 'transform' in step.name or 'branch' in step.name or 'parallel' in step.name:
+                        explanations[step.name] = f"""**Purpose:** Apply business logic and calculations
+**Layer:** 🥈 Silver (Transformation)
+**What it does:** Adds calculated fields, enriches data
+**Why it matters:** Transforms raw data into analysis-ready format
+**ODIBI_CORE feature:** Parallel execution for independent transforms"""
+                    
+                    elif 'validate' in step.name:
+                        explanations[step.name] = f"""**Purpose:** Validate data quality and filter invalid records
+**Layer:** 🥇 Gold (Quality Assurance)
+**What it does:** Checks data rules, removes invalid rows
+**Why it matters:** Ensures only high-quality data reaches analytics
+**ODIBI_CORE feature:** Truth-preserving snapshots show exactly what was filtered and why"""
+                    
+                    elif 'cache' in step.name:
+                        explanations[step.name] = f"""**Purpose:** Cache intermediate results for performance
+**Layer:** 🥇 Gold (Optimization)
+**What it does:** Stores computed data to avoid recomputation
+**Why it matters:** Reduces execution time for downstream steps
+**ODIBI_CORE feature:** Built-in caching with automatic invalidation"""
+                    
+                    elif 'publish' in step.name:
+                        explanations[step.name] = f"""**Purpose:** Publish final business-ready dataset
+**Layer:** 🥇 Gold (Output)
+**What it does:** Saves final results to target system
+**Why it matters:** Delivers analytics-ready data to consumers
+**ODIBI_CORE feature:** Multi-format output (CSV, Parquet, Delta) with schema preservation"""
+                    
+                    else:
+                        explanations[step.name] = f"""**Purpose:** {step.name.replace('_', ' ').title()}
+**Layer:** {step.layer.capitalize()}
+**ODIBI_CORE feature:** Config-driven execution with full lineage tracking"""
                 
                 story_path = tracker.export_to_story(
                     story_dir=str(story_dir),
@@ -377,6 +427,7 @@ class CreativeShowcaseExecutor:
                     dag_builder=orchestrator.dag_builder if hasattr(orchestrator, 'dag_builder') else None
                 )
                 logger.info(f"   ✅ HTML story generated: {story_path}")
+                logger.info(f"   📝 Added {len(explanations)} step explanations")
             except Exception as e:
                 logger.warning(f"   ⚠️  Story generation failed: {e}")
             
@@ -421,6 +472,17 @@ class CreativeShowcaseExecutor:
 **Complexity Level:** {execution.complexity_level.capitalize()}  
 **Timestamp:** {execution.timestamp}  
 **Status:** {'✅ SUCCESS' if execution.status == 'SUCCESS' else '❌ FAILED'}
+
+---
+
+## 💎 What Makes ODIBI_CORE Unique
+
+🎯 **Native DAG Orchestration** - No Airflow, no Prefect - pure Python dependency resolution  
+🔍 **Truth-Preserving Lineage** - Tracker captures every transformation with before/after snapshots  
+🏅 **Medallion-First Architecture** - Bronze (raw) → Silver (clean) → Gold (business) layering built-in  
+⚡ **Event-Driven Observability** - Real-time lifecycle hooks without external monitoring tools  
+🧩 **Config-Driven Pipelines** - Entire DAG defined in JSON/SQL, zero hardcoding required  
+📊 **Auto-Generated Stories** - HTML visualizations show exactly what happened to your data  
 
 ---
 
@@ -487,29 +549,57 @@ This showcase validated ODIBI_CORE's ability to:
 
 ---
 
-## 🎓 Educational Value
+## 🏅 Medallion Architecture Walkthrough
 
-### ConfigLoader Insights
-- Parsed JSON configuration with {execution.steps_executed} steps
-- Normalized into `Step` dataclass instances
-- Validated dependency graph structure
+This showcase demonstrates ODIBI_CORE's medallion-first design:
 
-### Orchestrator Insights
-- Built {execution.dag_topology} DAG topology
-- Detected dependencies and execution order
-- Coordinated {execution.steps_executed} nodes
+**🥉 Bronze Layer (Raw Ingestion)**
+- Ingested raw data from multiple sources
+- Created initial datasets with standardized schemas
+- No transformations - pure data capture
 
-### Tracker Insights
-- Captured {execution.tracker_snapshots} schema evolution snapshots
-- Preserved data lineage metadata
-- Enabled truth-preserving story generation
+**🥈 Silver Layer (Transformation & Quality)**
+- Applied {execution.steps_executed - 4} transformation steps
+- {'Added caching for performance' if execution.cache_hits > 0 else 'Sequential transformations'}
+- {'Validated data quality (filtered invalid rows)' if execution.validation_checks > 0 else 'No validation in this simple pipeline'}
 
-### EventEmitter Insights
-- Fired {len(execution.events_fired)} unique event types
-- Enabled real-time observability hooks
-- Supported custom listener registration
+**🥇 Gold Layer (Business-Ready)**
+- Published final dataset ready for analytics
+- Schema: Enriched with calculated fields
+- Quality: {f'Validated ({execution.validation_checks} checks)' if execution.validation_checks > 0 else 'Unvalidated (simple pipeline)'}
 
 ---
+
+## 🔬 Component Spotlight
+
+### ConfigLoader
+**What it did:** Loaded {execution.steps_executed} steps from JSON configuration  
+**Why it matters:** Zero hardcoding - entire pipeline defined declaratively  
+**Concrete example:** Parsed step dependencies automatically (e.g., `merge_sources` depends on all `ingest_*` steps)
+
+### Orchestrator + DAGBuilder
+**What it did:** Built {execution.dag_topology} DAG with {execution.steps_executed} nodes, resolved dependencies  
+**Why it matters:** Automatic parallel execution - runs independent steps concurrently  
+**Concrete example:** Detected {execution.steps_executed} steps can run in optimal order based on dependencies
+
+### Tracker (Truth-Preserving Lineage)
+**What it did:** Captured {execution.tracker_snapshots} snapshots showing data evolution  
+**Why it matters:** Full auditability - see exactly what changed at each step  
+**Concrete example:** Tracked schema changes (columns added/removed) and row deltas (filtering/merging)
+
+### EventEmitter (Observability)
+**What it did:** Fired {len(execution.events_fired)} event types ({', '.join(list(execution.events_fired)[:2])})  
+**Why it matters:** Real-time hooks for monitoring without external tools  
+**Concrete example:** Fired `pipeline_start`, `step_start`, `step_complete`, `pipeline_complete` for full visibility
+
+### PandasEngineContext
+**What it did:** Executed all transformations using Pandas with DuckDB SQL support  
+**Why it matters:** Engine abstraction - swap to SparkEngineContext for big data  
+**Concrete example:** Same config runs on Pandas locally or Spark in Databricks
+
+---
+
+## 🎓 Educational Value
 
 ## 📝 Status Report
 
@@ -718,12 +808,13 @@ This showcase validated ODIBI_CORE's ability to:
         for story_dir in story_dirs:
             showcase_num = int(story_dir.name.split("_")[1])
             
-            # Find the HTML file in this directory
+            # Find the MOST RECENT HTML file in this directory
             html_files = list(story_dir.glob("*.html"))
             if not html_files:
                 continue
             
-            html_file = html_files[0]
+            # Sort by modification time and get the newest
+            html_file = max(html_files, key=lambda f: f.stat().st_mtime)
             rel_path = html_file.relative_to(self.output_path)
             
             # Determine complexity

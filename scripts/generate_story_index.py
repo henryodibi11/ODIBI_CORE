@@ -159,12 +159,13 @@ html_content = f"""<!DOCTYPE html>
 for story_dir in story_dirs:
     showcase_num = int(story_dir.name.split("_")[1])
     
-    # Find the HTML file in this directory
+    # Find the MOST RECENT HTML file in this directory
     html_files = list(story_dir.glob("*.html"))
     if not html_files:
         continue
     
-    html_file = html_files[0]
+    # Sort by modification time and get the newest
+    html_file = max(html_files, key=lambda f: f.stat().st_mtime)
     rel_path = html_file.relative_to(output_path)
     
     # Determine complexity
