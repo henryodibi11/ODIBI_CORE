@@ -13,7 +13,7 @@ ODIBI_ROOT = Path(__file__).parent.parent.parent.parent
 if str(ODIBI_ROOT) not in sys.path:
     sys.path.insert(0, str(ODIBI_ROOT))
 
-from odibi_core.learnodibi_ui.theme import apply_theme, COLORS, success_box, error_box, info_box
+from odibi_core.learnodibi_ui.theme import apply_theme, COLORS, success_box, error_box, info_box, warning_box
 from odibi_core.learnodibi_ui.utils import initialize_session_state
 
 # Page config

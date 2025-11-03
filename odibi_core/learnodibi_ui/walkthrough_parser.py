@@ -59,16 +59,23 @@ class WalkthroughParser:
     
     def list_walkthroughs(self) -> List[Dict[str, str]]:
         """List all available walkthroughs"""
+        if not self.walkthroughs_dir.exists():
+            return []
+            
         walkthroughs = []
         
-        for file in self.walkthroughs_dir.glob("DEVELOPER_WALKTHROUGH_*.md"):
-            walkthrough = self.parse_walkthrough(file)
-            walkthroughs.append({
-                "filename": file.name,
-                "title": walkthrough.title,
-                "description": walkthrough.description,
-                "duration": walkthrough.duration
-            })
+        for file in self.walkthroughs_dir.glob("*.md"):
+            if file.name.startswith("DEVELOPER_WALKTHROUGH") or file.name.startswith("PHASE_"):
+                try:
+                    walkthrough = self.parse_walkthrough(file)
+                    walkthroughs.append({
+                        "filename": file.name,
+                        "title": walkthrough.title,
+                        "description": walkthrough.description,
+                        "duration": walkthrough.duration
+                    })
+                except Exception:
+                    continue
         
         return sorted(walkthroughs, key=lambda x: x["filename"])
     
@@ -471,7 +478,21 @@ class WalkthroughParser:
 def get_walkthrough_parser(odibi_root: Path = None) -> WalkthroughParser:
     """Get walkthrough parser instance"""
     if odibi_root is None:
-        odibi_root = Path(__file__).parent.parent.parent
+        odibi_root = Path(__file__).parent.parent
     
-    walkthroughs_dir = odibi_root / "docs" / "walkthroughs"
+    candidates = [
+        odibi_root / "docs" / "walkthroughs",
+        odibi_root.parent / "docs" / "walkthroughs",
+        Path.cwd() / "docs" / "walkthroughs",
+    ]
+    
+    walkthroughs_dir = None
+    for candidate in candidates:
+        if candidate.exists() and any(candidate.glob("*.md")):
+            walkthroughs_dir = candidate
+            break
+    
+    if walkthroughs_dir is None:
+        walkthroughs_dir = candidates[0]
+    
     return WalkthroughParser(walkthroughs_dir)

@@ -91,6 +91,13 @@ dev = [
 where = ["."]
 include = ["odibi_core*"]
 
+[tool.setuptools.package-data]
+odibi_core = [
+    "docs/walkthroughs/*.md",
+    "resources/*.json",
+    "learnodibi_data/**/*",
+]
+
 [project.scripts]
 odibi = "odibi_core.cli:main"
 learnodibi = "odibi_core.learnodibi:launch_ui"

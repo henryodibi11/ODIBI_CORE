@@ -10,9 +10,26 @@ from datetime import datetime
 class ManifestLoader:
     """Loads and provides access to walkthrough manifest data"""
     
-    def __init__(self, project_root: Path):
+    def __init__(self, project_root: Optional[Path] = None):
+        if project_root is None:
+            project_root = Path(__file__).resolve().parents[1]
         self.project_root = project_root
-        self.manifest_path = project_root / "walkthrough_manifest.json"
+        
+        candidates = [
+            project_root / "resources" / "walkthrough_manifest.json",
+            project_root / "walkthrough_manifest.json",
+            Path.cwd() / "resources" / "walkthrough_manifest.json",
+        ]
+        
+        self.manifest_path = None
+        for candidate in candidates:
+            if candidate.exists():
+                self.manifest_path = candidate
+                break
+        
+        if self.manifest_path is None:
+            self.manifest_path = candidates[0]
+            
         self.manifest = self._load_manifest()
     
     def _load_manifest(self) -> Dict:
