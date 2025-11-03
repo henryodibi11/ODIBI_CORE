@@ -1373,7 +1373,7 @@ class MetricType(Enum):
 
 **File**: `grafana_templates/README.md`
 
-```text
+```markdown
 # Grafana Dashboard Templates
 
 Pre-built dashboards for ODIBI CORE observability.
@@ -1391,13 +1391,10 @@ Pre-built dashboards for ODIBI CORE observability.
 3. Configure Prometheus data source
 
 ### Option 2: Local Metrics (No Grafana)
-```python
-# [demo]
-from odibi_core.observability import MetricsExporter
-
-exporter = MetricsExporter(metrics)
-print(exporter.generate_report())  # Human-readable report
-```
+    from odibi_core.observability import MetricsExporter
+    
+    exporter = MetricsExporter(metrics)
+    print(exporter.generate_report())  # Human-readable report
 
 ## No External Dependencies Required
 

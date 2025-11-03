@@ -1946,6 +1946,7 @@ print('✅ All Phase 7 imports successful')
 ### Azure Environment Variables
 
 ```bash
+# [demo]
 # Account key authentication
 export AZURE_STORAGE_ACCOUNT=myaccount
 export AZURE_STORAGE_KEY=abc123...
@@ -1960,6 +1961,7 @@ export AZURE_CLIENT_SECRET=secret...
 ### CloudAdapter Usage
 
 ```python
+# [demo]
 # Azure with account key
 adapter = CloudAdapter.create(
     "azure",
@@ -1985,6 +1987,7 @@ adapter = CloudAdapter.create("azure", account_name="test", simulate=True)
 ### CloudCacheManager API
 
 ```python
+# [demo]
 from odibi_core.cloud import CloudAdapter
 from odibi_core.cache import CloudCacheManager
 from odibi_core.metrics import MetricsManager

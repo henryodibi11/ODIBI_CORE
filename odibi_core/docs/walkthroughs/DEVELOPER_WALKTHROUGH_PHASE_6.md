@@ -92,12 +92,12 @@ Phase 6 transforms ODIBI CORE from a **batch-only framework** into a **productio
 ### Why Streaming Matters
 
 **Batch Processing** (Phases 1-5):
-```
+```text
 Run once → Process all data → Exit → Schedule externally (cron)
 ```
 
 **Streaming Processing** (Phase 6):
-```
+```text
 Run continuously → Process new data → Checkpoint → Repeat
                       ↓
               Resume from failure
@@ -123,7 +123,7 @@ By the end of this walkthrough, you'll have:
 
 ## 🗺️ Dependency Map (Phase 6)
 
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │                 User Code / Examples                        │
 │         run_streaming_demo.py, scheduled jobs               │
@@ -318,10 +318,10 @@ Data classes define the **contract** for streaming configuration. By creating th
    
    class StreamMode(str, Enum):
        """Stream processing modes."""
-       FILE_WATCH = "file_watch"      # Monitor directory for new files
-       INTERVAL = "interval"           # Poll at fixed intervals
-       INCREMENTAL = "incremental"     # Read new data since last watermark
-       EVENT = "event"                 # Triggered by external events
+       FILE_WATCH = "file_watch"
+       INTERVAL = "interval"
+       INCREMENTAL = "incremental"
+       EVENT = "event"
    ```
 
 3. Add configuration dataclass:
@@ -393,7 +393,6 @@ Data classes define the **contract** for streaming configuration. By creating th
 ```python
 from odibi_core.streaming import StreamMode, StreamConfig, StreamSource
 
-# Create a file watch configuration
 config = StreamConfig(
     mode=StreamMode.FILE_WATCH,
     source_path="data/incoming/",
@@ -439,7 +438,6 @@ The StreamManager class is the entry point for all streaming operations. Buildin
            checkpoint_dir: Directory to store watermark files
            
        Example:
-           >>> # File watch mode
            >>> stream = StreamManager.from_source(
            ...     "csv",
            ...     path="data/incoming/",
@@ -617,7 +615,6 @@ File watch mode is the simplest streaming pattern: monitor a directory, read new
                logger.warning(f"Source path is not a directory: {source_path}")
                return None
            
-           # Find all matching files
            pattern = str(source_path / config.file_pattern)
            all_files = set(glob.glob(pattern))
            new_files = all_files - source.processed_files
@@ -628,7 +625,6 @@ File watch mode is the simplest streaming pattern: monitor a directory, read new
            
            logger.info(f"Found {len(new_files)} new files for {source.name}")
            
-           # Read all new files
            dfs = []
            for file_path in sorted(new_files):
                try:
@@ -644,7 +640,6 @@ File watch mode is the simplest streaming pattern: monitor a directory, read new
            
            source.last_run = datetime.now()
            
-           # Combine all dataframes
            if engine == "pandas":
                return pd.concat(dfs, ignore_index=True) if len(dfs) > 1 else dfs[0]
            else:
@@ -706,21 +701,17 @@ from odibi_core.streaming import StreamManager
 import pandas as pd
 from pathlib import Path
 
-# Create test directory and files
 Path("test_stream").mkdir(exist_ok=True)
 pd.DataFrame({"a": [1, 2]}).to_csv("test_stream/file1.csv", index=False)
 pd.DataFrame({"a": [3, 4]}).to_csv("test_stream/file2.csv", index=False)
 
-# Setup stream manager
 stream = StreamManager.from_source("csv", path="test_stream", mode="file_watch", pattern="*.csv")
 
-# Read batch (should find 2 files)
 batch = stream.read_batch(list(stream.sources.keys())[0])
-print(f"Rows: {len(batch)}")  # Should print 4
+print(f"Rows: {len(batch)}")
 
-# Read again (no new files)
 batch2 = stream.read_batch(list(stream.sources.keys())[0])
-print(f"Second batch: {batch2}")  # Should print None
+print(f"Second batch: {batch2}")
 ```
 
 **Success Criteria**: 
@@ -751,7 +742,6 @@ Incremental mode enables processing only **new** records from a file by tracking
            """Load watermark value from file."""
            if source.config.watermark_file and Path(source.config.watermark_file).exists():
                value = Path(source.config.watermark_file).read_text().strip()
-               # Try parsing as datetime
                try:
                    from datetime import datetime
                    return datetime.fromisoformat(value)
@@ -773,15 +763,12 @@ Incremental mode enables processing only **new** records from a file by tracking
            if not config.watermark_column:
                raise ValueError("Incremental mode requires watermark_column")
            
-           # Load last watermark
            last_watermark = self._load_watermark(source)
            
-           # Read full dataset
            df = self._read_file(config.source_path, config.format, config.read_options, engine)
            if df is None:
                return None
            
-           # Filter to new records
            if last_watermark is not None:
                if engine == "pandas":
                    df = df[df[config.watermark_column] > last_watermark]
@@ -789,7 +776,6 @@ Incremental mode enables processing only **new** records from a file by tracking
                    from pyspark.sql.functions import col
                    df = df.filter(col(config.watermark_column) > last_watermark)
            
-           # Update watermark
            if len(df) > 0 if engine == "pandas" else df.count() > 0:
                if engine == "pandas":
                    new_watermark = df[config.watermark_column].max()
@@ -982,8 +968,8 @@ Checkpoints are serialized DAG state. Before implementing save/load logic, defin
    class NodeCheckpoint:
        """Checkpoint for a single node."""
        node_name: str
-       state: str                    # SUCCESS, FAILED, RETRY
-       completed_at: str             # ISO format timestamp
+       state: str
+       completed_at: str
        duration_ms: float
        attempts: int = 1
        error_message: Optional[str] = None
@@ -1150,7 +1136,6 @@ CheckpointManager handles the persistence lifecycle: create checkpoint objects, 
            with open(file_path, "r") as f:
                data = json.load(f)
            
-           # Reconstruct checkpoint object
            checkpoint = Checkpoint(
                checkpoint_id=data["checkpoint_id"],
                dag_name=data["dag_name"],
@@ -1302,10 +1287,10 @@ ScheduleManager orchestrates **when** pipelines run. Before implementing schedul
    
    class ScheduleMode(str, Enum):
        """Schedule modes."""
-       INTERVAL = "interval"     # Run every N seconds
-       CRON = "cron"             # Cron expression
-       FILE_WATCH = "file_watch" # Trigger on file events
-       MANUAL = "manual"         # Explicit trigger
+       INTERVAL = "interval"
+       CRON = "cron"
+       FILE_WATCH = "file_watch"
+       MANUAL = "manual"
    ```
 
 3. Add Schedule dataclass:
@@ -1449,7 +1434,7 @@ ScheduleManager needs to calculate **when** to run schedules and dispatch execut
        
        def _parse_cron_next_run(self, cron_expr: str) -> datetime:
            """Parse cron expression to next run time (simplified)."""
-           # TODO: Full cron parsing (use croniter library in production)
+           # Full cron parsing would use croniter library in production
            # For now, just schedule 1 hour from now
            return datetime.now() + timedelta(hours=1)
    ```
@@ -1471,7 +1456,6 @@ ScheduleManager needs to calculate **when** to run schedules and dispatch execut
                        schedule.last_run = now
                        schedule.run_count += 1
                        
-                       # Calculate next run
                        if schedule.mode == ScheduleMode.INTERVAL:
                            schedule.next_run = now + timedelta(seconds=schedule.interval_seconds)
                        elif schedule.mode == ScheduleMode.CRON:
@@ -1636,9 +1620,9 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
    ```python
    class ExecutionMode(str, Enum):
        """DAG execution modes."""
-       BATCH = "batch"       # One-shot execution
-       STREAM = "stream"     # Continuous with checkpointing
-       RESUME = "resume"     # Resume from checkpoint
+       BATCH = "batch"
+       STREAM = "stream"
+       RESUME = "resume"
    ```
 
 2. Update DAGExecutor constructor:
@@ -1650,22 +1634,22 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
            context: EngineContext,
            tracker: Tracker,
            events: EventEmitter,
-           mode: ExecutionMode = ExecutionMode.BATCH,  # NEW
-           checkpoint_manager: Optional[Any] = None,   # NEW
+           mode: ExecutionMode = ExecutionMode.BATCH,
+           checkpoint_manager: Optional[Any] = None,
        ):
            self.dag = dag
            self.context = context
            self.tracker = tracker
            self.events = events
-           self.mode = mode                            # NEW
-           self.checkpoint_manager = checkpoint_manager # NEW
+           self.mode = mode
+           self.checkpoint_manager = checkpoint_manager
    ```
 
 3. Add run_continuous method:
    ```python
        def run_continuous(
            self,
-           stream_manager: Any,  # StreamManager
+           stream_manager: Any,
            max_iterations: Optional[int] = None,
            sleep_seconds: int = 10,
        ) -> None:
@@ -1683,10 +1667,8 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
                logger.info(f"Starting iteration {iteration}")
                
                try:
-                   # Run DAG
                    self.run()
                    
-                   # Create checkpoint
                    if self.checkpoint_manager:
                        from odibi_core.checkpoint import NodeCheckpoint
                        completed = [
@@ -1694,7 +1676,7 @@ DAGExecutor needs new execution modes (STREAM, RESUME) and a `run_continuous()` 
                                node_name=node.step.name,
                                state="SUCCESS",
                                completed_at=datetime.now().isoformat(),
-                               duration_ms=0.0,  # TODO: Track from tracker
+                               duration_ms=0.0,
                            )
                            for node in self.dag.nodes
                        ]
@@ -1751,14 +1733,12 @@ Tracker needs to record which **iteration** and **checkpoint** each step executi
        row_delta: Optional[int] = None
        state: str = "pending"
        error_message: Optional[str] = None
-       iteration: int = 0                      # NEW
-       checkpoint_id: Optional[str] = None     # NEW
+       iteration: int = 0
+       checkpoint_id: Optional[str] = None
    ```
 
 2. Update to_dict method:
    ```python
-   # In StepExecution.to_dict(), add new fields to returned dict:
-   
    def to_dict(self) -> Dict[str, Any]:
        """Convert to JSON-serializable dict."""
        return {
@@ -1773,8 +1753,8 @@ Tracker needs to record which **iteration** and **checkpoint** each step executi
            "row_delta": self.row_delta,
            "state": self.state,
            "error_message": self.error_message,
-           "iteration": self.iteration,           # NEW
-           "checkpoint_id": self.checkpoint_id,   # NEW
+           "iteration": self.iteration,
+           "checkpoint_id": self.checkpoint_id,
        }
    ```
 
@@ -1845,12 +1825,10 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
        
        def test_file_watch_mode(self, temp_stream_dir, sample_dataframe):
            """Test file watch streaming mode."""
-           # Create sample files
            for i in range(3):
                file_path = temp_stream_dir / f"data_{i}.csv"
                sample_dataframe.to_csv(file_path, index=False)
            
-           # Setup stream manager
            stream = StreamManager.from_source(
                "csv",
                path=str(temp_stream_dir),
@@ -1859,11 +1837,10 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
                name="test_stream"
            )
            
-           # Read all files
            batch = stream.read_batch("test_stream")
            
            assert batch is not None
-           assert len(batch) == 300  # 3 files × 100 rows
+           assert len(batch) == 300
        
        def test_stream_status(self, temp_stream_dir):
            """Test stream status tracking."""
@@ -1892,7 +1869,6 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
            """Test checkpoint creation and persistence."""
            manager = CheckpointManager(checkpoint_dir=str(tmp_path))
            
-           # Create checkpoint
            completed = [
                NodeCheckpoint(
                    node_name="node1",
@@ -1913,7 +1889,6 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
            assert checkpoint.dag_name == "test_dag"
            assert len(checkpoint.completed_nodes) == 1
            
-           # Save checkpoint
            path = manager.save(checkpoint)
            assert path.exists()
        
@@ -1921,7 +1896,6 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
            """Test loading most recent checkpoint."""
            manager = CheckpointManager(checkpoint_dir=str(tmp_path))
            
-           # Create multiple checkpoints
            for i in range(3):
                checkpoint = manager.create_checkpoint(
                    dag_name="multi_test",
@@ -1932,7 +1906,6 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
                manager.save(checkpoint)
                time.sleep(0.1)
            
-           # Load latest
            latest = manager.load_latest("multi_test")
            
            assert latest is not None
@@ -1953,7 +1926,6 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
            
            scheduler = ScheduleManager(check_interval=0.5)
            
-           # Schedule every 1 second
            scheduler.schedule_interval(
                seconds=1,
                function=test_job,
@@ -1961,7 +1933,7 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
            )
            
            scheduler.start(daemon=True)
-           time.sleep(2.5)  # Should execute ~2 times
+           time.sleep(2.5)
            scheduler.stop()
            
            assert execution_count[0] >= 2
@@ -2006,7 +1978,6 @@ Tests validate streaming, checkpointing, and scheduling work correctly. This is 
            tracker = Tracker()
            events = EventEmitter()
            
-           # Test different modes
            for mode in [ExecutionMode.BATCH, ExecutionMode.STREAM, ExecutionMode.RESUME]:
                executor = DAGExecutor(
                    dag=dag,
@@ -2082,14 +2053,12 @@ A comprehensive demo shows how all pieces integrate: streaming sources + DAG exe
        """Demo 1: Basic streaming with file watch."""
        logger.info("=== Demo 1: Basic Streaming (File Watch) ===")
        
-       # Create test directory and files
        Path("test_stream").mkdir(exist_ok=True)
        for i in range(3):
            pd.DataFrame({"a": [i], "b": [i*2]}).to_csv(
                f"test_stream/file{i}.csv", index=False
            )
        
-       # Setup stream
        stream = StreamManager.from_source(
            "csv",
            path="test_stream",
@@ -2097,7 +2066,6 @@ A comprehensive demo shows how all pieces integrate: streaming sources + DAG exe
            pattern="*.csv"
        )
        
-       # Read batches
        batch_count = 0
        for batch in stream.read(max_iterations=3, sleep_seconds=1):
            batch_count += 1
@@ -2110,10 +2078,8 @@ A comprehensive demo shows how all pieces integrate: streaming sources + DAG exe
        """Demo 2: Checkpoint and resume."""
        logger.info("=== Demo 2: Checkpoint & Resume ===")
        
-       # Create checkpoint manager
        checkpoint_mgr = CheckpointManager()
        
-       # Simulate DAG execution
        from odibi_core.checkpoint import NodeCheckpoint
        
        completed = [
@@ -2130,7 +2096,6 @@ A comprehensive demo shows how all pieces integrate: streaming sources + DAG exe
        checkpoint_mgr.save(checkpoint)
        logger.info(f"Checkpoint created: {checkpoint.checkpoint_id}")
        
-       # Resume from checkpoint
        loaded = checkpoint_mgr.load_latest("my_pipeline")
        skip_nodes = checkpoint_mgr.get_resume_point(loaded)
        logger.info(f"Resume: skip {skip_nodes}\n")
@@ -2236,16 +2201,12 @@ By following these 15 steps, you've built:
 Run this complete verification sequence:
 
 ```bash
-# 1. Test imports
 python -c "from odibi_core.streaming import StreamManager; from odibi_core.checkpoint import CheckpointManager; from odibi_core.scheduler import ScheduleManager; print('✅ All imports successful')"
 
-# 2. Run all tests
 pytest tests/test_streaming_checkpointing.py -v
 
-# 3. Run demo
 python odibi_core/examples/run_streaming_demo.py
 
-# 4. Verify backward compatibility
 pytest tests/ -v
 ```
 

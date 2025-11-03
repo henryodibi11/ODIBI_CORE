@@ -293,7 +293,7 @@ def _log_execution(self, code: str, success: bool, error: Optional[str]):
 
 **Input**: Markdown file with special syntax
 
-```markdown
+````markdown
 # ODIBI CORE - Phase 1 Walkthrough
 
 **Author**: AMP  
@@ -325,7 +325,7 @@ spark = SparkSession.builder.getOrCreate()
 df = spark.createDataFrame([(1,), (2,), (3,)], ['a'])
 df.show()
 ```
-```
+````
 
 **Output**: Structured `Walkthrough` object with parsed steps
 
@@ -334,19 +334,19 @@ df.show()
 ### Mission 6: Code Fence Detection
 
 **Old Style** (auto-converted):
-```markdown
+````markdown
 # Pandas version
 ```python
 df = pd.DataFrame({'a': [1, 2, 3]})
 ```
-```
+````
 
 **New Style** (preferred):
-```markdown
+````markdown
 ```python[pandas]
 df = pd.DataFrame({'a': [1, 2, 3]})
 ```
-```
+````
 
 **Parser Logic**:
 
@@ -940,7 +940,7 @@ touch DEVELOPER_WALKTHROUGH_PHASE_10.md
 #### Step 18.2: Use the Walkthrough Template
 
 **Use the standard template structure**:
-```markdown
+````markdown
 # ODIBI CORE - Phase 10 Walkthrough
 
 **Author**: Your Name  
@@ -970,7 +970,7 @@ df.show()
 
 ### Mission 2: Second Task
 ...
-```
+````
 
 #### Step 18.3: Test Parser Integration
 
@@ -1107,6 +1107,7 @@ python -m streamlit run odibi_core/learnodibi_ui/app.py
 
 2. **Update utils.py** function list:
 ```python
+# [demo]
 # In odibi_core/learnodibi_ui/utils.py
 
 def get_all_functions() -> Dict[str, List[str]]:
