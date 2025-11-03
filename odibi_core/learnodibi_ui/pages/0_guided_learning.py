@@ -6,10 +6,9 @@ import streamlit as st
 import sys
 from pathlib import Path
 
-# Add odibi_core to path
-ODIBI_ROOT = Path(__file__).parent.parent.parent.parent
-if str(ODIBI_ROOT) not in sys.path:
-    sys.path.insert(0, str(ODIBI_ROOT))
+# Get odibi_core package root (works for both pip install and local dev)
+import odibi_core
+ODIBI_ROOT = Path(odibi_core.__file__).parent
 
 from odibi_core.learnodibi_ui.theme import apply_theme, COLORS, success_box, error_box, info_box
 from odibi_core.learnodibi_ui.walkthrough_parser import get_walkthrough_parser
