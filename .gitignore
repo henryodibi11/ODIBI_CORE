@@ -50,6 +50,7 @@ htmlcov/
 *.csv
 *.json
 !tests/fixtures/*.json
+!odibi_core/resources/*.json
 !tests/fixtures/*.csv
 
 # Logs
