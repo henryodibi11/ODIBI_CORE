@@ -141,6 +141,21 @@ def try_import_function(func_name: str) -> Optional[Any]:
             return getattr(module, func_name)
     except:
         pass
+    
+    submodules = [
+        'data_ops', 'math_utils', 'string_utils', 'datetime_utils',
+        'conversion_utils', 'thermo_utils', 'psychro_utils', 
+        'reliability_utils', 'unit_conversion', 'validation_utils', 'helpers'
+    ]
+    
+    for submod in submodules:
+        try:
+            module = importlib.import_module(f'odibi_core.functions.{submod}')
+            if hasattr(module, func_name):
+                return getattr(module, func_name)
+        except:
+            continue
+    
     return None
 
 def get_function_signature(func_name: str) -> str:

@@ -1,0 +1,3 @@
+include odibi_core/resources/*.json
+recursive-include odibi_core/docs/walkthroughs *.md
+recursive-include odibi_core/learnodibi_data *
