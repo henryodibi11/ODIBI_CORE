@@ -4,7 +4,7 @@
 **Domain:** Logistics  
 **DAG Topology:** Cascade  
 **Complexity Level:** Simple  
-**Timestamp:** 2025-11-02T20:51:52.663083  
+**Timestamp:** 2025-11-02T21:03:05.974374  
 **Status:** ✅ SUCCESS
 
 ---
@@ -33,12 +33,12 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 ## 🔧 Framework Components Used
 
 - **ConfigLoader**
+- **EventEmitter**
 - **PandasEngineContext**
 - **Tracker**
+- **DAGExecutor**
 - **DAGBuilder**
 - **Orchestrator**
-- **DAGExecutor**
-- **EventEmitter**
 
 ---
 
@@ -47,7 +47,7 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 4 |
-| **Execution Time** | 18.00ms |
+| **Execution Time** | 22.51ms |
 | **Events Fired** | 4 |
 | **Tracker Snapshots** | 5 |
 | **Cache Hits** | 0 |
@@ -60,17 +60,17 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `pipeline_complete`
 - `step_start`
-- `step_complete`
 - `pipeline_start`
+- `step_complete`
+- `pipeline_complete`
 
 ---
 
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> This run demonstrated how PandasEngineContext handles cascade patterns, revealing 4 steps executed smoothly.
+> Event-driven hooks captured 4 lifecycle events, enabling real-time observability.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize simple-complexity configurations

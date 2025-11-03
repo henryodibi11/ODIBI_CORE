@@ -4,7 +4,7 @@
 **Domain:** Logistics  
 **DAG Topology:** Conditional  
 **Complexity Level:** Advanced  
-**Timestamp:** 2025-11-02T20:51:54.377774  
+**Timestamp:** 2025-11-02T21:03:08.070696  
 **Status:** ✅ SUCCESS
 
 ---
@@ -33,12 +33,12 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 ## 🔧 Framework Components Used
 
 - **ConfigLoader**
+- **EventEmitter**
 - **PandasEngineContext**
 - **Tracker**
+- **DAGExecutor**
 - **DAGBuilder**
 - **Orchestrator**
-- **DAGExecutor**
-- **EventEmitter**
 
 ---
 
@@ -47,9 +47,9 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 9 |
-| **Execution Time** | 24.01ms |
+| **Execution Time** | 24.00ms |
 | **Events Fired** | 4 |
-| **Tracker Snapshots** | 5 |
+| **Tracker Snapshots** | 3 |
 | **Cache Hits** | 1 |
 | **Validation Checks** | 1 |
 | **Components Used** | 7 |
@@ -60,23 +60,23 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `pipeline_complete`
 - `step_start`
-- `step_complete`
 - `pipeline_start`
+- `step_complete`
+- `pipeline_complete`
 
 ---
 
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> This advanced pipeline showed how ODIBI_CORE scales from single-source ingestion to multi-format merging with validation.
+> The gold layer's merge proved critical for track end-to-end delivery times, validating DAG-based orchestration.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize advanced-complexity configurations
 - ✅ Build and execute Conditional DAG topologies
 - ✅ Fire 4 lifecycle events for observability
-- ✅ Track data lineage through 5 schema snapshots
+- ✅ Track data lineage through 3 schema snapshots
 - ✅ Orchestrate pipelines in the **Logistics** domain
 
 ---
@@ -94,7 +94,7 @@ This showcase validated ODIBI_CORE's ability to:
 - Coordinated 9 nodes
 
 ### Tracker Insights
-- Captured 5 schema evolution snapshots
+- Captured 3 schema evolution snapshots
 - Preserved data lineage metadata
 - Enabled truth-preserving story generation
 

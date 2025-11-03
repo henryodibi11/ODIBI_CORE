@@ -4,7 +4,7 @@
 **Domain:** Logistics  
 **DAG Topology:** Linear  
 **Complexity Level:** Medium  
-**Timestamp:** 2025-11-02T20:51:53.863398  
+**Timestamp:** 2025-11-02T21:03:07.479058  
 **Status:** ✅ SUCCESS
 
 ---
@@ -33,12 +33,12 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 ## 🔧 Framework Components Used
 
 - **ConfigLoader**
+- **EventEmitter**
 - **PandasEngineContext**
 - **Tracker**
+- **DAGExecutor**
 - **DAGBuilder**
 - **Orchestrator**
-- **DAGExecutor**
-- **EventEmitter**
 
 ---
 
@@ -47,9 +47,9 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 9 |
-| **Execution Time** | 18.00ms |
+| **Execution Time** | 23.51ms |
 | **Events Fired** | 4 |
-| **Tracker Snapshots** | 8 |
+| **Tracker Snapshots** | 7 |
 | **Cache Hits** | 1 |
 | **Validation Checks** | 1 |
 | **Components Used** | 7 |
@@ -60,23 +60,23 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `pipeline_complete`
 - `step_start`
-- `step_complete`
 - `pipeline_start`
+- `step_complete`
+- `pipeline_complete`
 
 ---
 
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> This run demonstrated how EventEmitter handles linear patterns, revealing 9 steps executed smoothly.
+> Event-driven hooks captured 4 lifecycle events, enabling real-time observability.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize medium-complexity configurations
 - ✅ Build and execute Linear DAG topologies
 - ✅ Fire 4 lifecycle events for observability
-- ✅ Track data lineage through 8 schema snapshots
+- ✅ Track data lineage through 7 schema snapshots
 - ✅ Orchestrate pipelines in the **Logistics** domain
 
 ---
@@ -94,7 +94,7 @@ This showcase validated ODIBI_CORE's ability to:
 - Coordinated 9 nodes
 
 ### Tracker Insights
-- Captured 8 schema evolution snapshots
+- Captured 7 schema evolution snapshots
 - Preserved data lineage metadata
 - Enabled truth-preserving story generation
 

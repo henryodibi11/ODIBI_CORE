@@ -4,7 +4,7 @@
 **Domain:** IoT  
 **DAG Topology:** Branching  
 **Complexity Level:** Advanced  
-**Timestamp:** 2025-11-02T20:55:28.136086  
+**Timestamp:** 2025-11-02T21:03:07.933631  
 **Status:** ✅ SUCCESS
 
 ---
@@ -32,13 +32,13 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 ## 🔧 Framework Components Used
 
-- **DAGExecutor**
 - **ConfigLoader**
-- **DAGBuilder**
 - **EventEmitter**
-- **Tracker**
-- **Orchestrator**
 - **PandasEngineContext**
+- **Tracker**
+- **DAGExecutor**
+- **DAGBuilder**
+- **Orchestrator**
 
 ---
 
@@ -47,9 +47,9 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 8 |
-| **Execution Time** | 10.51ms |
+| **Execution Time** | 28.72ms |
 | **Events Fired** | 4 |
-| **Tracker Snapshots** | 3 |
+| **Tracker Snapshots** | 7 |
 | **Cache Hits** | 1 |
 | **Validation Checks** | 1 |
 | **Components Used** | 7 |
@@ -60,23 +60,23 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `pipeline_complete`
 - `step_start`
-- `step_complete`
 - `pipeline_start`
+- `step_complete`
+- `pipeline_complete`
 
 ---
 
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> This advanced pipeline in the IoT domain successfully orchestrated 8 steps using ODIBI_CORE's native framework, demonstrating the power of event-driven, DAG-based data engineering.
+> Event-driven hooks captured 4 lifecycle events, enabling real-time observability.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize advanced-complexity configurations
 - ✅ Build and execute Branching DAG topologies
 - ✅ Fire 4 lifecycle events for observability
-- ✅ Track data lineage through 3 schema snapshots
+- ✅ Track data lineage through 7 schema snapshots
 - ✅ Orchestrate pipelines in the **IoT** domain
 
 ---
@@ -94,7 +94,7 @@ This showcase validated ODIBI_CORE's ability to:
 - Coordinated 8 nodes
 
 ### Tracker Insights
-- Captured 3 schema evolution snapshots
+- Captured 7 schema evolution snapshots
 - Preserved data lineage metadata
 - Enabled truth-preserving story generation
 

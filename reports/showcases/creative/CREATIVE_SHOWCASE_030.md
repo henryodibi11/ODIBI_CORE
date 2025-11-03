@@ -4,7 +4,7 @@
 **Domain:** Healthcare  
 **DAG Topology:** Branching  
 **Complexity Level:** Medium  
-**Timestamp:** 2025-11-02T20:51:52.935327  
+**Timestamp:** 2025-11-02T21:03:06.296758  
 **Status:** ✅ SUCCESS
 
 ---
@@ -33,12 +33,12 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 ## 🔧 Framework Components Used
 
 - **ConfigLoader**
+- **EventEmitter**
 - **PandasEngineContext**
 - **Tracker**
+- **DAGExecutor**
 - **DAGBuilder**
 - **Orchestrator**
-- **DAGExecutor**
-- **EventEmitter**
 
 ---
 
@@ -47,9 +47,9 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 8 |
-| **Execution Time** | 19.51ms |
+| **Execution Time** | 21.00ms |
 | **Events Fired** | 4 |
-| **Tracker Snapshots** | 3 |
+| **Tracker Snapshots** | 8 |
 | **Cache Hits** | 0 |
 | **Validation Checks** | 1 |
 | **Components Used** | 7 |
@@ -60,23 +60,23 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `pipeline_complete`
 - `step_start`
-- `step_complete`
 - `pipeline_start`
+- `step_complete`
+- `pipeline_complete`
 
 ---
 
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> This medium pipeline in the Healthcare domain successfully orchestrated 8 steps using ODIBI_CORE's native framework, demonstrating the power of event-driven, DAG-based data engineering.
+> The silver layer's cache proved critical for reduce average wait times, validating DAG-based orchestration.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize medium-complexity configurations
 - ✅ Build and execute Branching DAG topologies
 - ✅ Fire 4 lifecycle events for observability
-- ✅ Track data lineage through 3 schema snapshots
+- ✅ Track data lineage through 8 schema snapshots
 - ✅ Orchestrate pipelines in the **Healthcare** domain
 
 ---
@@ -94,7 +94,7 @@ This showcase validated ODIBI_CORE's ability to:
 - Coordinated 8 nodes
 
 ### Tracker Insights
-- Captured 3 schema evolution snapshots
+- Captured 8 schema evolution snapshots
 - Preserved data lineage metadata
 - Enabled truth-preserving story generation
 

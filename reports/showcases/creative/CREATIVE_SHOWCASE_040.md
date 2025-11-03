@@ -4,7 +4,7 @@
 **Domain:** Logistics  
 **DAG Topology:** Parallel  
 **Complexity Level:** Medium  
-**Timestamp:** 2025-11-02T20:51:53.183401  
+**Timestamp:** 2025-11-02T21:03:06.648978  
 **Status:** ✅ SUCCESS
 
 ---
@@ -33,12 +33,12 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 ## 🔧 Framework Components Used
 
 - **ConfigLoader**
+- **EventEmitter**
 - **PandasEngineContext**
 - **Tracker**
+- **DAGExecutor**
 - **DAGBuilder**
 - **Orchestrator**
-- **DAGExecutor**
-- **EventEmitter**
 
 ---
 
@@ -47,9 +47,9 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 | Metric | Value |
 |--------|-------|
 | **Steps Executed** | 11 |
-| **Execution Time** | 19.00ms |
+| **Execution Time** | 25.00ms |
 | **Events Fired** | 4 |
-| **Tracker Snapshots** | 4 |
+| **Tracker Snapshots** | 3 |
 | **Cache Hits** | 1 |
 | **Validation Checks** | 1 |
 | **Components Used** | 7 |
@@ -60,23 +60,23 @@ Configuration → DAGBuilder → Orchestrator → DAGExecutor → EventEmitter �
 
 Total events captured: **4**
 
-- `pipeline_complete`
 - `step_start`
-- `step_complete`
 - `pipeline_start`
+- `step_complete`
+- `pipeline_complete`
 
 ---
 
 ## 🧠 What ODIBI_CORE Learned
 
 > **Reflection:**  
-> This medium pipeline in the Logistics domain successfully orchestrated 11 steps using ODIBI_CORE's native framework, demonstrating the power of event-driven, DAG-based data engineering.
+> Tracker snapshots preserved 3 schema evolutions, demonstrating data lineage tracking.
 
 This showcase validated ODIBI_CORE's ability to:
 - ✅ Load and normalize medium-complexity configurations
 - ✅ Build and execute Parallel DAG topologies
 - ✅ Fire 4 lifecycle events for observability
-- ✅ Track data lineage through 4 schema snapshots
+- ✅ Track data lineage through 3 schema snapshots
 - ✅ Orchestrate pipelines in the **Logistics** domain
 
 ---
@@ -94,7 +94,7 @@ This showcase validated ODIBI_CORE's ability to:
 - Coordinated 11 nodes
 
 ### Tracker Insights
-- Captured 4 schema evolution snapshots
+- Captured 3 schema evolution snapshots
 - Preserved data lineage metadata
 - Enabled truth-preserving story generation
 

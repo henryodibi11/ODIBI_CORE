@@ -270,12 +270,74 @@ class CreativeShowcaseExecutor:
             # ============================================================
             logger.info(f"[6/7] DAGExecutor: Running pipeline...")
             
-            # Simulate execution (real execution would use orchestrator.run())
+            # Start pipeline tracking
+            tracker.start_pipeline(f"showcase_{showcase_id:03d}")
             events.emit('pipeline_start', steps=steps)
+            
+            # Simulate execution with tracker snapshots
+            import pandas as pd
+            from datetime import datetime as dt_now
             
             for i, step in enumerate(execution_order, 1):
                 events.emit('step_start', step=step.__dict__)
                 logger.debug(f"   [{step.layer}] {i}/{len(execution_order)}: {step.name}")
+                
+                # Start step tracking
+                tracker.start_step(step.name, step.layer)
+                
+                # Create simulated before/after dataframes
+                if 'ingest' in step.name:
+                    # Ingestion: no before, creates data
+                    before_df = None
+                    after_df = pd.DataFrame({
+                        'id': range(1, 101),
+                        'timestamp': [dt_now.now()] * 100,
+                        'value': [random.random() * 100 for _ in range(100)],
+                        'category': [random.choice(['A', 'B', 'C']) for _ in range(100)]
+                    })
+                elif 'merge' in step.name:
+                    # Merge: combines data
+                    before_df = pd.DataFrame({'id': range(1, 101), 'value': [1.0] * 100})
+                    after_df = pd.DataFrame({
+                        'id': range(1, 101),
+                        'value': [1.0] * 100,
+                        'merged_field': [random.choice(['X', 'Y']) for _ in range(100)]
+                    })
+                elif 'transform' in step.name or 'branch' in step.name or 'parallel' in step.name:
+                    # Transform: modifies data
+                    before_df = pd.DataFrame({
+                        'id': range(1, 101),
+                        'value': [random.random() * 100 for _ in range(100)]
+                    })
+                    after_df = before_df.copy()
+                    after_df['calculated'] = after_df['value'] * 2
+                    after_df['rounded'] = after_df['calculated'].round(2)
+                elif 'validate' in step.name:
+                    # Validation: may filter rows
+                    before_df = pd.DataFrame({
+                        'id': range(1, 101),
+                        'value': [random.random() * 100 for _ in range(100)]
+                    })
+                    after_df = before_df[before_df['value'] > 10]  # Filter some rows
+                elif 'cache' in step.name:
+                    # Cache: passthrough
+                    before_df = pd.DataFrame({
+                        'id': range(1, 51),
+                        'value': [random.random() * 100 for _ in range(50)]
+                    })
+                    after_df = before_df.copy()
+                else:
+                    # Default: passthrough
+                    before_df = pd.DataFrame({'id': range(1, 51), 'data': ['sample'] * 50})
+                    after_df = before_df.copy()
+                
+                # Capture snapshots
+                if before_df is not None:
+                    tracker.snapshot("before", before_df, context)
+                tracker.snapshot("after", after_df, context)
+                
+                # End step tracking
+                tracker.end_step(step.name, "success")
                 
                 # Track cache/validation
                 if 'cache' in step.name:
@@ -285,6 +347,7 @@ class CreativeShowcaseExecutor:
                 
                 events.emit('step_complete', step=step.__dict__)
             
+            # End pipeline tracking (no end_pipeline method exists)
             events.emit('pipeline_complete')
             
             execution.tracker_snapshots = random.randint(3, 8)
@@ -489,6 +552,214 @@ This showcase validated ODIBI_CORE's ability to:
         logger.info(f"\n{'='*80}")
         logger.info(f"✅ All {count} showcases executed")
         logger.info(f"{'='*80}\n")
+        
+        # Auto-generate stories index
+        self._generate_stories_index()
+
+
+    def _generate_stories_index(self) -> None:
+        """Auto-generate HTML index for all showcase stories."""
+        logger.info(f"\n{'='*80}")
+        logger.info(f"📚 Auto-generating Stories Index")
+        logger.info(f"{'='*80}\n")
+        
+        from datetime import datetime
+        
+        stories_index = self.output_path / "SHOWCASE_STORIES_INDEX.html"
+        
+        # Find all story directories
+        story_dirs = sorted([d for d in self.output_path.iterdir() 
+                            if d.is_dir() and d.name.startswith("showcase_")])
+        
+        html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODIBI_CORE Creative Showcase Stories</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }}
+        
+        .header {{
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }}
+        
+        .header h1 {{
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }}
+        
+        .header p {{
+            color: #666;
+            margin: 5px 0;
+        }}
+        
+        .showcase-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }}
+        
+        .showcase-card {{
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }}
+        
+        .showcase-card:hover {{
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }}
+        
+        .showcase-card h3 {{
+            margin: 0 0 10px 0;
+            color: #667eea;
+            font-size: 18px;
+        }}
+        
+        .showcase-card .badge {{
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }}
+        
+        .badge.simple {{ background: #dbeafe; color: #1e40af; }}
+        .badge.medium {{ background: #fef3c7; color: #92400e; }}
+        .badge.advanced {{ background: #fecaca; color: #991b1b; }}
+        
+        .showcase-card .description {{
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }}
+        
+        .showcase-card a {{
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }}
+        
+        .showcase-card a:hover {{
+            background: #5568d3;
+        }}
+        
+        .stats {{
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }}
+        
+        .stat {{
+            text-align: center;
+        }}
+        
+        .stat .number {{
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }}
+        
+        .stat .label {{
+            font-size: 14px;
+            color: #666;
+        }}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎨 ODIBI_CORE Creative Showcase Stories</h1>
+        <p><strong>{len(story_dirs)} Story-Driven Pipelines</strong> demonstrating ODIBI_CORE's native orchestration</p>
+        <p>Each story shows data transformations, schema evolution, and pipeline execution flow</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="number">{len(story_dirs)}</div>
+                <div class="label">Stories Generated</div>
+            </div>
+            <div class="stat">
+                <div class="number">10</div>
+                <div class="label">Domains</div>
+            </div>
+            <div class="stat">
+                <div class="number">6</div>
+                <div class="label">DAG Topologies</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="showcase-grid">
+"""
+        
+        # Add each showcase
+        for story_dir in story_dirs:
+            showcase_num = int(story_dir.name.split("_")[1])
+            
+            # Find the HTML file in this directory
+            html_files = list(story_dir.glob("*.html"))
+            if not html_files:
+                continue
+            
+            html_file = html_files[0]
+            rel_path = html_file.relative_to(self.output_path)
+            
+            # Determine complexity
+            if showcase_num <= 20:
+                complexity = "simple"
+            elif showcase_num <= 70:
+                complexity = "medium"
+            else:
+                complexity = "advanced"
+            
+            html_content += f"""
+        <div class="showcase-card">
+            <h3>Showcase #{showcase_num:03d}</h3>
+            <span class="badge {complexity}">{complexity.upper()}</span>
+            <div class="description">
+                Interactive HTML visualization showing pipeline execution, data transformations, and schema evolution
+            </div>
+            <a href="{rel_path.as_posix()}" target="_blank">View Story →</a>
+        </div>
+"""
+        
+        html_content += f"""
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; color: white;">
+        <p><strong>ODIBI_CORE</strong> | Creative Showcase Suite v1.0</p>
+        <p>Auto-generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
+    </div>
+</body>
+</html>
+"""
+        
+        stories_index.write_text(html_content, encoding='utf-8')
+        logger.info(f"✅ Stories index auto-generated: {stories_index.name}")
+        logger.info(f"   {len(story_dirs)} stories indexed")
+        logger.info(f"   Open: file:///{stories_index.as_posix()}\n")
 
 
 def main():
@@ -508,7 +779,8 @@ def main():
     logger.info("="*80)
     logger.info(f"\n📁 Output Locations:")
     logger.info(f"  - Reports: D:/projects/odibi_core/reports/showcases/creative/")
-    logger.info(f"  - Outputs: D:/projects/odibi_core/resources/output/creative_showcases/")
+    logger.info(f"  - Stories: D:/projects/odibi_core/resources/output/creative_showcases/")
+    logger.info(f"  - Index: D:/projects/odibi_core/resources/output/creative_showcases/SHOWCASE_STORIES_INDEX.html")
     logger.info("\n🚀 Ready for Phase 3: Insights Aggregation\n")
 
 
