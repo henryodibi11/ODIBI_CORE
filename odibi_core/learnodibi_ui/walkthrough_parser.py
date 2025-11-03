@@ -64,18 +64,17 @@ class WalkthroughParser:
             
         walkthroughs = []
         
-        for file in self.walkthroughs_dir.glob("*.md"):
-            if file.name.startswith("DEVELOPER_WALKTHROUGH") or file.name.startswith("PHASE_"):
-                try:
-                    walkthrough = self.parse_walkthrough(file)
-                    walkthroughs.append({
-                        "filename": file.name,
-                        "title": walkthrough.title,
-                        "description": walkthrough.description,
-                        "duration": walkthrough.duration
-                    })
-                except Exception:
-                    continue
+        for file in self.walkthroughs_dir.glob("DEVELOPER_WALKTHROUGH_*.md"):
+            try:
+                walkthrough = self.parse_walkthrough(file)
+                walkthroughs.append({
+                    "filename": file.name,
+                    "title": walkthrough.title,
+                    "description": walkthrough.description,
+                    "duration": walkthrough.duration
+                })
+            except Exception:
+                continue
         
         return sorted(walkthroughs, key=lambda x: x["filename"])
     

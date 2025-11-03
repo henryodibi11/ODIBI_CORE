@@ -369,20 +369,7 @@ def main():
             filename = wt['filename']
             manifest_data = manifest_walkthroughs.get(filename, {})
             
-            # Add validation indicator
-            if manifest_data:
-                code_coverage = (manifest_data.get('code_blocks_valid', 0) / manifest_data.get('code_blocks_total', 1) * 100) if manifest_data.get('code_blocks_total', 0) > 0 else 100
-                if code_coverage >= 90:
-                    indicator = "✅"
-                elif code_coverage >= 70:
-                    indicator = "⚠️"
-                else:
-                    indicator = "❌"
-                
-                label = f"{indicator} {wt['title']} ({wt['duration']})"
-            else:
-                label = f"{wt['title']} ({wt['duration']})"
-            
+            label = f"{wt['title']} ({wt['duration']})"
             walkthrough_options[label] = filename
         
         selected_title = st.selectbox(
