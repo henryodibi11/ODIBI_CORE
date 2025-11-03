@@ -301,17 +301,22 @@ def render_step_content(step, parser):
         with st.expander("🔍 Learn More", expanded=False):
             st.markdown("**Implementation Details**")
             
-            # Try to show function source for functions mentioned in code
+            # Try to show function source for ODIBI functions mentioned in code
             code_for_analysis = code_to_show or step.code
             if code_for_analysis:
                 import re
                 function_pattern = r'([a-zA-Z_][a-zA-Z0-9_]*)\('
                 functions_found = re.findall(function_pattern, code_for_analysis)
                 
-                if functions_found:
+                odibi_functions = []
+                for func_name in set(functions_found):
+                    if get_function_source(func_name):
+                        odibi_functions.append(func_name)
+                
+                if odibi_functions:
                     selected_func = st.selectbox(
                         "View function source:",
-                        options=["Select..."] + list(set(functions_found)),
+                        options=["Select..."] + sorted(odibi_functions),
                         key=f"func_select_{step.step_number}"
                     )
                     
@@ -325,8 +330,6 @@ def render_step_content(step, parser):
                             call_info = get_function_call_stack(selected_func)
                             for info in call_info:
                                 st.text(info)
-                        else:
-                            st.info(f"Source not available for `{selected_func}`")
             
             st.markdown("**Tips:**")
             st.markdown("- Use the debugger to step through code")
