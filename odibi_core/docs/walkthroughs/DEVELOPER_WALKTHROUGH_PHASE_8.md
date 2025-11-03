@@ -510,7 +510,7 @@ class StructuredLogEntry:
 
 **Add to same file**:
 
-```python
+```python[demo]
 class StructuredLogger:
     """
     Structured logger for DAG execution events.
@@ -578,7 +578,7 @@ class StructuredLogger:
 
 **Add to StructuredLogger class**:
 
-```python
+```python[demo]
     def log_node_start(
         self,
         node_name: str,
@@ -654,7 +654,7 @@ class StructuredLogger:
 
 **Add to StructuredLogger class**:
 
-```python
+```python[demo]
     def query_logs(
         self,
         event_type: Optional[str] = None,
@@ -740,7 +740,7 @@ class StructuredLogger:
 
 **Test StructuredLogger**:
 
-```python
+```python[demo]
 # Test script: test_structured_logger.py
 from odibi_core.observability import StructuredLogger, LogLevel
 
@@ -964,7 +964,7 @@ class MetricsExporter:
 
 **Test MetricsExporter**:
 
-```python
+```python[demo]
 from odibi_core.metrics import MetricsManager, MetricType
 from odibi_core.observability import MetricsExporter
 
@@ -1051,7 +1051,7 @@ class RegisteredHook:
 
 **Add to same file**:
 
-```python
+```python[demo]
 class EventBus:
     """
     Event bus for pipeline automation hooks.
@@ -1140,7 +1140,7 @@ class EventBus:
 
 **Add to EventBus class**:
 
-```python
+```python[demo]
     def create_summary_hook(self) -> Callable[[Dict[str, Any]], None]:
         """Create a hook that prints pipeline summary."""
         def summary_hook(event_data: Dict[str, Any]) -> None:
@@ -1209,7 +1209,7 @@ class EventBus:
 
 **Test EventBus**:
 
-```python
+```python[demo]
 # [demo]
 from odibi_core.observability import EventBus, EventPriority
 
@@ -1270,7 +1270,7 @@ class MetricType(Enum):
 
 **Add to MetricsManager class**:
 
-```python
+```python[demo]
 # [demo]
     def record_memory_usage(self, name: str, memory_mb: float) -> None:
         """Record memory usage for a component."""
@@ -1373,7 +1373,7 @@ class MetricType(Enum):
 
 **File**: `grafana_templates/README.md`
 
-```markdown
+```text
 # Grafana Dashboard Templates
 
 Pre-built dashboards for ODIBI CORE observability.
@@ -1391,10 +1391,13 @@ Pre-built dashboards for ODIBI CORE observability.
 3. Configure Prometheus data source
 
 ### Option 2: Local Metrics (No Grafana)
-    from odibi_core.observability import MetricsExporter
-    
-    exporter = MetricsExporter(metrics)
-    print(exporter.generate_report())  # Human-readable report
+```python
+# [demo]
+from odibi_core.observability import MetricsExporter
+
+exporter = MetricsExporter(metrics)
+print(exporter.generate_report())  # Human-readable report
+```
 
 ## No External Dependencies Required
 
@@ -1415,7 +1418,7 @@ ODIBI CORE generates metrics locally. Grafana integration is optional.
 
 **File**: `tests/test_phase8_observability.py`
 
-```python
+```python[demo]
 # [demo]
 """Tests for Phase 8: Observability & Automation"""
 

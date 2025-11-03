@@ -514,19 +514,25 @@ def get_walkthrough_parser(odibi_root: Path = None) -> WalkthroughParser:
     if odibi_root is None:
         odibi_root = Path(__file__).parent.parent
     
+    # Priority order for finding walkthroughs:
+    # 1. Inside the package (for pip installed)
+    # 2. Development location (for local dev)
+    # 3. Current working directory
     candidates = [
-        odibi_root / "docs" / "walkthroughs",
-        odibi_root.parent / "docs" / "walkthroughs",
-        Path.cwd() / "docs" / "walkthroughs",
+        odibi_root / "docs" / "walkthroughs",           # Inside package (pip install)
+        odibi_root.parent / "docs" / "walkthroughs",    # Dev: one level up
+        odibi_root.parent.parent / "docs" / "walkthroughs",  # Dev: two levels up
+        Path.cwd() / "docs" / "walkthroughs",           # Current directory
     ]
     
     walkthroughs_dir = None
     for candidate in candidates:
-        if candidate.exists() and any(candidate.glob("*.md")):
+        if candidate.exists() and any(candidate.glob("DEVELOPER_WALKTHROUGH_*.md")):
             walkthroughs_dir = candidate
             break
     
     if walkthroughs_dir is None:
-        walkthroughs_dir = candidates[0]
+        # Fallback to package location even if empty
+        walkthroughs_dir = odibi_root / "docs" / "walkthroughs"
     
     return WalkthroughParser(walkthroughs_dir)

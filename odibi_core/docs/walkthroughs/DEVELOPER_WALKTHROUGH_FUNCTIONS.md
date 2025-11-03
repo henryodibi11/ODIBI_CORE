@@ -100,7 +100,7 @@ By completing this walkthrough, you'll master:
 - You don't want to write the same logic twice
 
 **Without ODIBI** (duplicated code):
-```python
+```python[demo]
 # [demo]
 import numpy as np
 import pyspark.sql.functions as F
@@ -124,7 +124,7 @@ else:
 ```
 
 **With ODIBI** (write once):
-```python
+```python[demo]
 # [demo]
 df = safe_divide(df, "revenue", "cost", "margin", fill_value=0.0)
 # Works on both Pandas and Spark automatically!
@@ -147,7 +147,7 @@ df = safe_divide(df, "revenue", "cost", "margin", fill_value=0.0)
 
 **Create**: `odibi_core/functions/math_utils.py`
 
-```python
+```python[demo]
 # [demo]
 import pandas as pd
 import numpy as np
@@ -219,7 +219,7 @@ def detect_engine(df: Any) -> str:
 </details>
 
 **Test it**:
-```python
+```python[demo]
 # Create test file: tests/test_detect_engine.py
 import pandas as pd
 from odibi_core.functions.math_utils import detect_engine
@@ -255,7 +255,7 @@ pytest tests/test_detect_engine.py -v
 
 Now implement the **detect-and-dispatch pattern**:
 
-```python
+```python[demo]
 def safe_divide(
     df: Any, 
     numerator: str, 
@@ -360,7 +360,7 @@ def _safe_divide_spark(df, numerator, denominator, result_col, fill_value):
 
 **Create**: `tests/test_functions_math_utils.py`
 
-```python
+```python[demo]
 import pandas as pd
 import pytest
 
@@ -492,7 +492,7 @@ pytest tests/test_functions_math_utils.py -v -m spark
 
 **Add to `math_utils.py`**:
 
-```python
+```python[demo]
 # [demo]
 def calculate_z_score(df: Any, column: str, result_col: Optional[str] = None) -> Any:
     """
@@ -595,7 +595,7 @@ def _calculate_z_score_spark(df, column, result_col):
 
 **Add to `odibi_core/functions/string_utils.py`**:
 
-```python
+```python[demo]
 """
 String Utilities - Text manipulation and cleaning for DataFrames.
 
@@ -689,7 +689,7 @@ def to_uppercase(df: Any, column: str, result_col: Optional[str] = None) -> Any:
 
 **Add to `odibi_core/functions/validation_utils.py`**:
 
-```python
+```python[demo]
 """
 Validation Utilities - Data quality checks and schema validation.
 
@@ -754,7 +754,7 @@ def validate_columns_exist(df: Any, required_columns: List[str]) -> bool:
 
 **Add to `odibi_core/functions/thermo_utils.py`**:
 
-```python
+```python[demo]
 """
 Thermodynamic Utilities - Steam properties and energy calculations.
 
@@ -890,7 +890,7 @@ def calculate_availability(mtbf: float, mttr: float) -> float:
 ```
 
 **Real-world usage**:
-```python
+```python[demo]
 # [demo]
 import pandas as pd
 from odibi_core.functions.reliability_utils import calculate_mtbf, calculate_availability, calculate_mttr
@@ -959,7 +959,7 @@ print(equipment)
 
 **Add to `odibi_core/functions/unit_conversion.py`**:
 
-```python
+```python[demo]
 # [demo]
 """
 Unit Conversion Utilities - Convert between engineering units.
@@ -1087,7 +1087,7 @@ def convert_temperature(value: float, from_unit: str, to_unit: str) -> float:
 
 ### Step 6.2: Add Custom Unit Support
 
-```python
+```python[demo]
 # [demo]
 def register_custom_unit(unit_type: str, unit_name: str, to_base_multiplier: float):
     """
@@ -1188,7 +1188,7 @@ print(measurements)
 
 #### Step 1: Import All Required Functions
 
-```python
+```python[demo]
 # [demo]
 import pandas as pd
 from odibi_core.functions.math_utils import safe_divide, calculate_z_score
@@ -1200,7 +1200,7 @@ from odibi_core.functions.unit_conversion import convert_pressure, convert_tempe
 
 #### Step 2: Load Raw Plant Data
 
-```python
+```python[demo]
 # [demo]
 plant_data = pd.DataFrame({
     "asset_id": ["  Boiler-1  ", "  Turbine-A", " Pump-X "],  # Note: messy data with spaces
@@ -1215,7 +1215,7 @@ plant_data = pd.DataFrame({
 
 #### Step 3: Clean and Standardize Data (String Utils)
 
-```python
+```python[demo]
 # [demo]
 # Remove whitespace and standardize to uppercase
 plant_data = trim_whitespace(plant_data, "asset_id")
@@ -1225,7 +1225,7 @@ plant_data = to_uppercase(plant_data, "asset_id")
 
 #### Step 4: Calculate Efficiency (Math Utils with Safe Division)
 
-```python
+```python[demo]
 # [demo]
 # Handle division by zero for turbine (no fuel consumption)
 plant_data = safe_divide(
@@ -1239,7 +1239,7 @@ plant_data = safe_divide(
 
 #### Step 5: Calculate Thermodynamic Properties (Thermo Utils)
 
-```python
+```python[demo]
 # [demo]
 # Calculate steam enthalpy at operating conditions
 plant_data["enthalpy_kj_kg"] = plant_data.apply(
@@ -1250,7 +1250,7 @@ plant_data["enthalpy_kj_kg"] = plant_data.apply(
 
 #### Step 6: Calculate Reliability Metrics (Reliability Utils)
 
-```python
+```python[demo]
 # [demo]
 # Mean Time Between Failures for each asset
 plant_data["mtbf_hours"] = plant_data.apply(
@@ -1261,7 +1261,7 @@ plant_data["mtbf_hours"] = plant_data.apply(
 
 #### Step 7: Detect Anomalies (Math Utils - Statistics)
 
-```python
+```python[demo]
 # [demo]
 # Find efficiency outliers using z-score
 plant_data = calculate_z_score(plant_data, "efficiency_ratio", "efficiency_zscore")
@@ -1270,7 +1270,7 @@ plant_data = calculate_z_score(plant_data, "efficiency_ratio", "efficiency_zscor
 
 #### Step 8: Convert Units for International Reporting (Unit Conversion)
 
-```python
+```python[demo]
 # [demo]
 # Convert to US/Imperial units
 plant_data["pressure_psi"] = plant_data["steam_pressure_bar"].apply(
@@ -1283,7 +1283,7 @@ plant_data["temp_f"] = plant_data["steam_temp_c"].apply(
 
 #### Step 9: View Final Results
 
-```python
+```python[demo]
 # [demo]
 print(plant_data)
 # Expected columns:

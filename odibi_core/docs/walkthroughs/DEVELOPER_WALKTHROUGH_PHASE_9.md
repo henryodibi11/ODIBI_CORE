@@ -579,7 +579,7 @@ print(f"SDK enabled: {manifest['features']['sdk']}")
 
 **File**: `odibi_core/sdk/config_validator.py`
 
-```python
+```python[demo]
 """
 Configuration validator for pipeline definitions.
 
@@ -635,7 +635,7 @@ class ValidationIssue:
 
 **Add to same file**:
 
-```python
+```python[demo]
 class ConfigValidator:
     """
     Validate pipeline configuration files.
@@ -735,7 +735,7 @@ class ConfigValidator:
 
 **Add to ConfigValidator class**:
 
-```python
+```python[demo]
 def _validate_step(self, step: Dict[str, Any]) -> None:
     """Validate a single step configuration."""
     step_name = step.get("name", "<unnamed>")
@@ -797,7 +797,7 @@ def _validate_step(self, step: Dict[str, Any]) -> None:
 
 **Add to ConfigValidator class**:
 
-```python
+```python[demo]
 def _check_circular_dependencies(self, steps: List[Dict[str, Any]]) -> None:
     """Check for circular dependencies using DFS."""
     # Build dependency graph
@@ -856,7 +856,7 @@ def _check_circular_dependencies(self, steps: List[Dict[str, Any]]) -> None:
 
 **Add to ConfigValidator class**:
 
-```python
+```python[demo]
 def _load_json(self, config_file: Path) -> List[Dict[str, Any]]:
     """Load configuration from JSON file."""
     try:
@@ -936,7 +936,7 @@ def _load_csv(self, config_file: Path) -> List[Dict[str, Any]]:
 
 **File**: `odibi_core/sdk/__init__.py`
 
-```python
+```python[demo]
 """
 ODIBI CORE SDK - Developer-friendly API for pipeline execution.
 
@@ -1106,7 +1106,7 @@ class ODIBI:
 
 **Add to `odibi_core/sdk/__init__.py`**:
 
-```python
+```python[demo]
 class Pipeline:
     """
     Fluent API for pipeline configuration and execution.
@@ -1255,7 +1255,7 @@ pip install click rich
 
 **File**: `odibi_core/cli.py`
 
-```python
+```python[demo]
 """
 ODIBI CORE Command-Line Interface.
 
@@ -1477,7 +1477,7 @@ odibi version
 
 **File**: `verify_phase9.py` (in project root)
 
-```python
+```python[demo]
 """
 Verification script for ODIBI CORE Phase 9 (SDK & CLI).
 

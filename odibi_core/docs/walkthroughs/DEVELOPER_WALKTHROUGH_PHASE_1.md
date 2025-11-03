@@ -375,7 +375,7 @@ D. `functions/`
 
 This is the **most fundamental** class in the framework. All Nodes inherit from it.
 
-```python
+```python[demo]
 """Base Node abstraction for ODIBI CORE."""
 
 from abc import ABC, abstractmethod
@@ -519,7 +519,7 @@ Add: `SKIPPED = "skipped"` after the RETRY line. Enum values follow the same pat
 
 **Create: `odibi_core/core/events.py`**
 
-```python
+```python[demo]
 """Event system for pipeline execution hooks."""
 
 from typing import Any, Callable, Dict, List, Optional
@@ -578,7 +578,7 @@ class EventEmitter:
 
 **Create: `odibi_core/core/tracker.py`**
 
-```python
+```python[demo]
 """Execution tracker for truth-preserving snapshots."""
 
 from typing import Any, Dict, List, Optional
@@ -746,7 +746,7 @@ D. Orchestrator
 
 **Create: `odibi_core/core/orchestrator.py`**
 
-```python
+```python[demo]
 """Pipeline orchestrator for DAG execution."""
 
 from typing import Any, Dict, List, Optional
@@ -827,7 +827,7 @@ class OrchestrationResult:
 
 **Create: `odibi_core/core/config_loader.py`**
 
-```python
+```python[demo]
 """Configuration loader for pipeline definitions."""
 
 import json
@@ -1021,7 +1021,7 @@ Copy the logic from `_load_from_json()` but skip the `open()` and `json.load()` 
 
 **Create: `odibi_core/core/__init__.py`**
 
-```python
+```python[demo]
 """Core framework components."""
 
 from odibi_core.core.node import NodeBase, NodeState, Step
@@ -1206,7 +1206,7 @@ D. collect_sample()
 
 **Create: `odibi_core/engine/pandas_context.py`**
 
-```python
+```python[run]
 """Pandas engine context implementation."""
 
 from typing import Any, Callable, Dict, Optional, Union
@@ -1271,7 +1271,7 @@ class PandasEngineContext(EngineContext):
 
 **Create: `odibi_core/engine/spark_context.py`**
 
-```python
+```python[run]
 """Spark engine context implementation."""
 
 from typing import Any, Callable, Dict, Optional, Union
@@ -1413,7 +1413,7 @@ Use: `return self.config.get(key, default)` — the dict.get() method handles mi
 
 **Create: `odibi_core/engine/__init__.py`**
 
-```python
+```python[run]
 """Engine context implementations."""
 
 from odibi_core.engine.base_context import EngineContext
@@ -1442,7 +1442,7 @@ __all__ = ["EngineContext", "PandasEngineContext", "SparkEngineContext"]
 
 **Create: `odibi_core/nodes/connect_node.py`**
 
-```python
+```python[demo]
 """ConnectNode for establishing database/storage connections."""
 
 from typing import Any, Dict
@@ -1488,7 +1488,7 @@ class ConnectNode(NodeBase):
 
 **Create: `odibi_core/nodes/ingest_node.py`**
 
-```python
+```python[demo]
 """IngestNode for reading data from sources."""
 
 from typing import Any, Dict
@@ -1584,7 +1584,7 @@ D. Via global variable
 
 **Create: `odibi_core/nodes/store_node.py`**
 
-```python
+```python[demo]
 """StoreNode for persisting data to storage."""
 
 from typing import Any, Dict
@@ -1622,7 +1622,7 @@ class StoreNode(NodeBase):
 
 **Create: `odibi_core/nodes/transform_node.py`**
 
-```python
+```python[demo]
 """TransformNode for data transformations."""
 
 from typing import Any, Dict
@@ -1678,7 +1678,7 @@ class TransformNode(NodeBase):
 
 **Create: `odibi_core/nodes/publish_node.py`**
 
-```python
+```python[demo]
 """PublishNode for exporting data to external systems."""
 
 from typing import Any, Dict
@@ -1745,7 +1745,7 @@ return data_map
 
 **Create: `odibi_core/nodes/__init__.py`**
 
-```python
+```python[demo]
 """Node type implementations."""
 
 from odibi_core.nodes.connect_node import ConnectNode
@@ -1859,7 +1859,7 @@ D. As a global variable
 
 **Create: `odibi_core/functions/registry.py`**
 
-```python
+```python[demo]
 """Function registry for dynamic function resolution."""
 
 from typing import Any, Callable, Dict
@@ -1902,7 +1902,7 @@ def register_function(path: str, func: Callable[..., Any]) -> None:
 
 **Create: `odibi_core/functions/thermo/steam.py`**
 
-```python
+```python[demo]
 """Steam property calculations."""
 
 def steam_enthalpy_btu_lb(pressure_psia: float, temp_f: float) -> float:
@@ -2064,7 +2064,7 @@ class ParquetReader(BaseReader):
 
 **Create: `odibi_core/story/generator.py`**
 
-```python
+```python[demo]
 """HTML story generation for pipeline execution."""
 
 from typing import Any, List
@@ -2099,7 +2099,7 @@ class StoryGenerator:
 
 **Create: `tests/conftest.py`**
 
-```python
+```python[demo]
 """Pytest configuration and shared fixtures."""
 
 import pytest
@@ -2153,7 +2153,7 @@ def events():
 
 **Create: `tests/test_node_base.py`**
 
-```python
+```python[demo]
 """Unit tests for NodeBase and NodeState."""
 
 import pytest
@@ -2192,7 +2192,7 @@ def test_step_default_values():
 
 **Create: `tests/test_engine_contracts.py`**
 
-```python
+```python[demo]
 """Unit tests for engine context contracts."""
 
 import pytest
@@ -2331,7 +2331,7 @@ Key sections:
 
 **Create: `odibi_core/examples/run_energy_efficiency_demo.py`**
 
-```python
+```python[demo]
 """Energy Efficiency demo pipeline."""
 
 def run_demo() -> None:
