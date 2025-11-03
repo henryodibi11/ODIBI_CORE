@@ -149,15 +149,19 @@ class CreativeShowcaseExecutor:
         
         # Load config metadata
         config_file = self.config_path / f"creative_showcase_{showcase_id:03d}.json"
+        metadata_file = self.config_path / f"creative_showcase_{showcase_id:03d}_metadata.json"
         
         if not config_file.exists():
             logger.error(f"Config file not found: {config_file}")
             return None
         
-        with open(config_file, 'r', encoding='utf-8') as f:
-            config_data = json.load(f)
-        
-        metadata = config_data.get("metadata", {})
+        # Load metadata from separate file
+        metadata = {}
+        if metadata_file.exists():
+            with open(metadata_file, 'r', encoding='utf-8') as f:
+                metadata = json.load(f)
+        else:
+            logger.warning(f"Metadata file not found: {metadata_file}")
         
         execution = CreativeExecution(
             showcase_id=showcase_id,
@@ -264,7 +268,7 @@ class CreativeShowcaseExecutor:
             # ============================================================
             # STEP 6: Execute Pipeline
             # ============================================================
-            logger.info(f"[6/6] DAGExecutor: Running pipeline...")
+            logger.info(f"[6/7] DAGExecutor: Running pipeline...")
             
             # Simulate execution (real execution would use orchestrator.run())
             events.emit('pipeline_start', steps=steps)
@@ -290,6 +294,28 @@ class CreativeShowcaseExecutor:
             
             # Generate reflection
             execution.reflection = self.generate_reflection(execution)
+            
+            # ============================================================
+            # Generate HTML Story
+            # ============================================================
+            logger.info(f"[7/7] Generating HTML story visualization...")
+            try:
+                story_dir = self.output_path / f"showcase_{showcase_id:03d}_story"
+                story_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Add explanations for the story
+                explanations = {
+                    "pipeline": f"**{execution.title}**\n\n{execution.backstory}\n\n**Goal:** {execution.data_goal}"
+                }
+                
+                story_path = tracker.export_to_story(
+                    story_dir=str(story_dir),
+                    explanations=explanations,
+                    dag_builder=orchestrator.dag_builder if hasattr(orchestrator, 'dag_builder') else None
+                )
+                logger.info(f"   ✅ HTML story generated: {story_path}")
+            except Exception as e:
+                logger.warning(f"   ⚠️  Story generation failed: {e}")
             
             end_time = datetime.now()
             execution.execution_time_ms = (end_time - start_time).total_seconds() * 1000

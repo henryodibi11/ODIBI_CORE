@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODIBI_CORE Creative Showcase Stories</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        
+        .header p {
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .showcase-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .showcase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .showcase-card h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .showcase-card .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .badge.simple { background: #dbeafe; color: #1e40af; }
+        .badge.medium { background: #fef3c7; color: #92400e; }
+        .badge.advanced { background: #fecaca; color: #991b1b; }
+        
+        .showcase-card .description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .showcase-card a {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .showcase-card a:hover {
+            background: #5568d3;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat .label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎨 ODIBI_CORE Creative Showcase Stories</h1>
+        <p><strong>100 Story-Driven Pipelines</strong> demonstrating ODIBI_CORE's native orchestration</p>
+        <p>Each story shows data transformations, schema evolution, and pipeline execution flow</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="number">3</div>
+                <div class="label">Stories Generated</div>
+            </div>
+            <div class="stat">
+                <div class="number">10</div>
+                <div class="label">Domains</div>
+            </div>
+            <div class="stat">
+                <div class="number">6</div>
+                <div class="label">DAG Topologies</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="showcase-grid">
+
+        <div class="showcase-card">
+            <h3>Showcase #001</h3>
+            <span class="badge simple">SIMPLE</span>
+            <div class="description">
+                Interactive HTML visualization showing pipeline execution, data transformations, and schema evolution
+            </div>
+            <a href="showcase_001_story/story_run_20251102_205528.html" target="_blank">View Story →</a>
+        </div>
+
+        <div class="showcase-card">
+            <h3>Showcase #050</h3>
+            <span class="badge medium">MEDIUM</span>
+            <div class="description">
+                Interactive HTML visualization showing pipeline execution, data transformations, and schema evolution
+            </div>
+            <a href="showcase_050_story/story_run_20251102_205528.html" target="_blank">View Story →</a>
+        </div>
+
+        <div class="showcase-card">
+            <h3>Showcase #087</h3>
+            <span class="badge advanced">ADVANCED</span>
+            <div class="description">
+                Interactive HTML visualization showing pipeline execution, data transformations, and schema evolution
+            </div>
+            <a href="showcase_087_story/story_run_20251102_205528.html" target="_blank">View Story →</a>
+        </div>
+
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; color: white;">
+        <p><strong>ODIBI_CORE</strong> | Creative Showcase Suite v1.0</p>
+        <p>Generated: 2025-11-02 20:56:04</p>
+    </div>
+</body>
+</html>

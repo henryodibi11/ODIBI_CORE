@@ -406,10 +406,15 @@ class CreativeShowcaseGenerator:
         for scenario in self.scenarios:
             config = self.generate_json_config(scenario)
             
-            # Save JSON config
+            # Save JSON config (ConfigLoader expects array of steps)
             json_file = self.config_path / f"creative_showcase_{scenario.showcase_id:03d}.json"
             with open(json_file, 'w', encoding='utf-8') as f:
-                json.dump(config, f, indent=2)
+                json.dump(config["steps"], f, indent=2)
+            
+            # Also save metadata separately for executor to read
+            metadata_file = self.config_path / f"creative_showcase_{scenario.showcase_id:03d}_metadata.json"
+            with open(metadata_file, 'w', encoding='utf-8') as f:
+                json.dump(config["metadata"], f, indent=2)
             
             if scenario.showcase_id % 10 == 0:
                 print(f"  ✅ Generated {scenario.showcase_id}/100 JSON configs...")
