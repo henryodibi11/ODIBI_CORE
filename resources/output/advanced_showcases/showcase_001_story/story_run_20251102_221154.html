@@ -1,0 +1,738 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODIBI Pipeline Story - run_20251102_221154</title>
+    
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+        color: #333;
+    }
+    
+    .story-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    
+    .story-header h1 {
+        margin: 0 0 10px 0;
+    }
+    
+    .story-header .meta {
+        opacity: 0.9;
+        font-size: 14px;
+    }
+    
+    .step-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .step-card h2 {
+        margin-top: 0;
+        color: #667eea;
+    }
+    
+    .step-card .step-meta {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    
+    .step-card.success {
+        border-left: 4px solid #10b981;
+    }
+    
+    .step-card.failed {
+        border-left: 4px solid #ef4444;
+    }
+    
+    table.data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin: 15px 0;
+    }
+    
+    table.data-table th {
+        background: #f3f4f6;
+        text-align: left;
+        padding: 8px 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #e5e7eb;
+    }
+    
+    table.data-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    table.data-table tbody tr:hover {
+        background: #f9fafb;
+    }
+    
+    .schema-diff {
+        margin: 15px 0;
+    }
+    
+    .schema-diff ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .schema-diff li {
+        padding: 4px 0;
+        font-family: monospace;
+        font-size: 13px;
+    }
+    
+    .schema-diff li.added {
+        color: #10b981;
+    }
+    
+    .schema-diff li.removed {
+        color: #ef4444;
+    }
+    
+    .schema-diff li.changed {
+        color: #f59e0b;
+    }
+    
+    details {
+        margin: 15px 0;
+    }
+    
+    summary {
+        cursor: pointer;
+        padding: 10px;
+        background: #f3f4f6;
+        border-radius: 4px;
+        user-select: none;
+    }
+    
+    summary:hover {
+        background: #e5e7eb;
+    }
+    
+    .collapsible-content {
+        padding: 15px 10px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    .stat-card .value {
+        font-size: 32px;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .stat-card .label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+    }
+    
+    code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+    }
+    
+    pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    
+    .footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+        color: #666;
+        font-size: 12px;
+    }
+    
+    .explanation {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+    }
+    
+    .explanation p {
+        margin: 8px 0;
+        line-height: 1.6;
+    }
+    
+    .explanation ul, .explanation ol {
+        margin: 8px 0;
+        padding-left: 25px;
+        line-height: 1.6;
+    }
+    
+    .explanation li {
+        margin: 4px 0;
+    }
+    
+    .explanation code {
+        background: #fef9c3;
+        color: #78350f;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 0.9em;
+    }
+    
+    .explanation pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 0.85em;
+    }
+    
+    .explanation pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    
+    .explanation table {
+        width: 100%;
+        margin: 12px 0;
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+    
+    .explanation th {
+        background: #fde68a;
+        border: 1px solid #e5e7eb;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #92400e;
+    }
+    
+    .explanation td {
+        border: 1px solid #e5e7eb;
+        padding: 6px 12px;
+        background: white;
+    }
+    
+    .explanation tr:hover td {
+        background: #fffbeb;
+    }
+    
+    .explanation strong {
+        color: #92400e;
+        font-weight: 600;
+    }
+    
+    .explanation em {
+        color: #b45309;
+        font-style: italic;
+    }
+    
+    .explanation h4 {
+        color: #92400e;
+        margin: 15px 0 8px 0;
+        font-size: 1em;
+    }
+</style>
+
+</head>
+<body>
+
+
+<div class="story-header">
+    <h1>ODIBI CORE Pipeline Story</h1>
+    <div class="meta">
+        <strong>Pipeline ID:</strong> run_20251102_221154<br>
+        <strong>Start Time:</strong> 2025-11-02T22:11:54.277049<br>
+        <strong>Duration:</strong> 0.01s
+    </div>
+</div>
+
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">7</div>
+        <div class="label">Total Steps</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">7</div>
+        <div class="label">Success</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">0</div>
+        <div class="label">Failed</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">100.0%</div>
+        <div class="label">Success Rate</div>
+    </div>
+</div>
+
+<div class="step-card success">
+<h2>calculate_kpi_1</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.53ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>57.40256557395034</td></tr><tr><td>2</td><td>59.6092096573114</td></tr><tr><td>3</td><td>95.82765506444133</td></tr><tr><td>4</td><td>91.67965387267132</td></tr><tr><td>5</td><td>21.634851738841732</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>57.40256557395034</td><td>114.80513114790068</td><td>114.81</td></tr><tr><td>2</td><td>59.6092096573114</td><td>119.2184193146228</td><td>119.22</td></tr><tr><td>3</td><td>95.82765506444133</td><td>191.65531012888266</td><td>191.66</td></tr><tr><td>4</td><td>91.67965387267132</td><td>183.35930774534265</td><td>183.36</td></tr><tr><td>5</td><td>21.634851738841732</td><td>43.269703477683464</td><td>43.27</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Apply business logic for settlement_lag calculation<br />
+<strong>Layer</strong>: 🥈 Silver (Transformation)<br />
+<strong>What it does</strong>: Adds calculated fields, enriches Finance data<br />
+<strong>Why it matters</strong>: Transforms raw data into analysis-ready format<br />
+<strong>Domain context</strong>: Supports settlement_lag tracking<br />
+<strong>ODIBI_CORE feature</strong>: Parallel execution for independent transforms</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>calculate_kpi_2</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.02ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>4.394831894052009</td></tr><tr><td>2</td><td>91.34777097345174</td></tr><tr><td>3</td><td>73.13429776878392</td></tr><tr><td>4</td><td>0.05493732410233321</td></tr><tr><td>5</td><td>46.875435206128415</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>4.394831894052009</td><td>8.789663788104018</td><td>8.79</td></tr><tr><td>2</td><td>91.34777097345174</td><td>182.6955419469035</td><td>182.7</td></tr><tr><td>3</td><td>73.13429776878392</td><td>146.26859553756785</td><td>146.27</td></tr><tr><td>4</td><td>0.05493732410233321</td><td>0.10987464820466641</td><td>0.11</td></tr><tr><td>5</td><td>46.875435206128415</td><td>93.75087041225683</td><td>93.75</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Apply business logic for settlement_lag calculation<br />
+<strong>Layer</strong>: 🥈 Silver (Transformation)<br />
+<strong>What it does</strong>: Adds calculated fields, enriches Finance data<br />
+<strong>Why it matters</strong>: Transforms raw data into analysis-ready format<br />
+<strong>Domain context</strong>: Supports settlement_lag tracking<br />
+<strong>ODIBI_CORE feature</strong>: Parallel execution for independent transforms</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>dedupe_events</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.02ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>22.875627191527027</td></tr><tr><td>2</td><td>18.52970040552151</td></tr><tr><td>3</td><td>1.1733939839038698</td></tr><tr><td>4</td><td>89.88657171795205</td></tr><tr><td>5</td><td>32.47173469638934</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>22.875627191527027</td><td>45.751254383054054</td><td>45.75</td></tr><tr><td>2</td><td>18.52970040552151</td><td>37.05940081104302</td><td>37.06</td></tr><tr><td>3</td><td>1.1733939839038698</td><td>2.3467879678077397</td><td>2.35</td></tr><tr><td>4</td><td>89.88657171795205</td><td>179.7731434359041</td><td>179.77</td></tr><tr><td>5</td><td>32.47173469638934</td><td>64.94346939277868</td><td>64.94</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Dedupe Events<br />
+<strong>Layer</strong>: Silver<br />
+<strong>Operation</strong>: unknown<br />
+<strong>ODIBI_CORE feature</strong>: Config-driven execution with full lineage tracking</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_events</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 0.51ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>6.461894388991674</td></tr><tr><td>2</td><td>23.396668750236714</td></tr><tr><td>3</td><td>80.83811945091877</td></tr><tr><td>4</td><td>44.5536359835597</td></tr><tr><td>5</td><td>79.05815588312234</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>6.461894388991674</td><td>12.923788777983347</td><td>12.92</td></tr><tr><td>2</td><td>23.396668750236714</td><td>46.79333750047343</td><td>46.79</td></tr><tr><td>3</td><td>80.83811945091877</td><td>161.67623890183754</td><td>161.68</td></tr><tr><td>4</td><td>44.5536359835597</td><td>89.1072719671194</td><td>89.11</td></tr><tr><td>5</td><td>79.05815588312234</td><td>158.11631176624468</td><td>158.12</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Ingest raw accounts from UNKNOWN source<br />
+<strong>Layer</strong>: 🥉 Bronze (Raw Data)<br />
+<strong>What it does</strong>: Reads data from Finance systems without transformation<br />
+<strong>Why it matters</strong>: Preserves raw data for audit trail and reprocessing<br />
+<strong>Domain context</strong>: FIX protocol streams<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format ingestion with automatic schema detection</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>publish_kpis</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 1.03ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>30.642957205691744</td></tr><tr><td>2</td><td>62.588804460462654</td></tr><tr><td>3</td><td>82.2678230892559</td></tr><tr><td>4</td><td>87.09655258147279</td></tr><tr><td>5</td><td>59.23686068518029</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>30.642957205691744</td><td>61.28591441138349</td><td>61.29</td></tr><tr><td>2</td><td>62.588804460462654</td><td>125.17760892092531</td><td>125.18</td></tr><tr><td>3</td><td>82.2678230892559</td><td>164.5356461785118</td><td>164.54</td></tr><tr><td>4</td><td>87.09655258147279</td><td>174.19310516294559</td><td>174.19</td></tr><tr><td>5</td><td>59.23686068518029</td><td>118.47372137036058</td><td>118.47</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Publish final Finance business-ready dataset<br />
+<strong>Layer</strong>: 🥇 Gold (Output)<br />
+<strong>What it does</strong>: Saves settlement_lag, trade_volume to PARQUET for consumption<br />
+<strong>Why it matters</strong>: Delivers analytics-ready data to Finance stakeholders<br />
+<strong>Domain context</strong>: Meets Finance reporting requirements<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format output with schema preservation</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>validate_kpis</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 0.51ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>48.21745372131468</td></tr><tr><td>2</td><td>42.10203260539743</td></tr><tr><td>3</td><td>30.652251121634144</td></tr><tr><td>4</td><td>94.42997509838895</td></tr><tr><td>5</td><td>45.60464108673862</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>48.21745372131468</td><td>96.43490744262937</td><td>96.43</td></tr><tr><td>2</td><td>42.10203260539743</td><td>84.20406521079487</td><td>84.2</td></tr><tr><td>3</td><td>30.652251121634144</td><td>61.30450224326829</td><td>61.3</td></tr><tr><td>4</td><td>94.42997509838895</td><td>188.8599501967779</td><td>188.86</td></tr><tr><td>5</td><td>45.60464108673862</td><td>91.20928217347723</td><td>91.21</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Validate Finance data quality and filter invalid records<br />
+<strong>Layer</strong>: 🥇 Gold (Quality Assurance)<br />
+<strong>What it does</strong>: Checks domain-specific rules, removes invalid rows<br />
+<strong>Why it matters</strong>: Ensures only high-quality data reaches analytics consumers<br />
+<strong>Domain context</strong>: Critical for {'pii': False, 'sox_compliant': True, 'latency_sla': '5min'}<br />
+<strong>ODIBI_CORE feature</strong>: Truth-preserving snapshots show exactly what was filtered and why</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>window_agg</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.02ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th></tr></thead><tbody><tr><td>1</td><td>25.833575821187228</td></tr><tr><td>2</td><td>14.578520575149911</td></tr><tr><td>3</td><td>39.933016409221814</td></tr><tr><td>4</td><td>7.753316938195864</td></tr><tr><td>5</td><td>96.68388059816098</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>settlement_lag</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>settlement_lag</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>25.833575821187228</td><td>51.667151642374456</td><td>51.67</td></tr><tr><td>2</td><td>14.578520575149911</td><td>29.157041150299822</td><td>29.16</td></tr><tr><td>3</td><td>39.933016409221814</td><td>79.86603281844363</td><td>79.87</td></tr><tr><td>4</td><td>7.753316938195864</td><td>15.506633876391728</td><td>15.51</td></tr><tr><td>5</td><td>96.68388059816098</td><td>193.36776119632196</td><td>193.37</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Window Agg<br />
+<strong>Layer</strong>: Silver<br />
+<strong>Operation</strong>: unknown<br />
+<strong>ODIBI_CORE feature</strong>: Config-driven execution with full lineage tracking</p></div>
+    </div>
+</details>
+
+</div>
+
+<div class="footer">
+    Generated by ODIBI CORE v1.0 Story Generator (Phase 5: DAG Execution)<br>
+    Framework: Node-centric, engine-agnostic, config-driven data engineering
+</div>
+
+</body></html>

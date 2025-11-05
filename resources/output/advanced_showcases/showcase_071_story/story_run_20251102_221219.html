@@ -1,0 +1,986 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODIBI Pipeline Story - run_20251102_221219</title>
+    
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+        color: #333;
+    }
+    
+    .story-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    
+    .story-header h1 {
+        margin: 0 0 10px 0;
+    }
+    
+    .story-header .meta {
+        opacity: 0.9;
+        font-size: 14px;
+    }
+    
+    .step-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .step-card h2 {
+        margin-top: 0;
+        color: #667eea;
+    }
+    
+    .step-card .step-meta {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    
+    .step-card.success {
+        border-left: 4px solid #10b981;
+    }
+    
+    .step-card.failed {
+        border-left: 4px solid #ef4444;
+    }
+    
+    table.data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin: 15px 0;
+    }
+    
+    table.data-table th {
+        background: #f3f4f6;
+        text-align: left;
+        padding: 8px 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #e5e7eb;
+    }
+    
+    table.data-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    table.data-table tbody tr:hover {
+        background: #f9fafb;
+    }
+    
+    .schema-diff {
+        margin: 15px 0;
+    }
+    
+    .schema-diff ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .schema-diff li {
+        padding: 4px 0;
+        font-family: monospace;
+        font-size: 13px;
+    }
+    
+    .schema-diff li.added {
+        color: #10b981;
+    }
+    
+    .schema-diff li.removed {
+        color: #ef4444;
+    }
+    
+    .schema-diff li.changed {
+        color: #f59e0b;
+    }
+    
+    details {
+        margin: 15px 0;
+    }
+    
+    summary {
+        cursor: pointer;
+        padding: 10px;
+        background: #f3f4f6;
+        border-radius: 4px;
+        user-select: none;
+    }
+    
+    summary:hover {
+        background: #e5e7eb;
+    }
+    
+    .collapsible-content {
+        padding: 15px 10px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    .stat-card .value {
+        font-size: 32px;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .stat-card .label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+    }
+    
+    code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+    }
+    
+    pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    
+    .footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+        color: #666;
+        font-size: 12px;
+    }
+    
+    .explanation {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+    }
+    
+    .explanation p {
+        margin: 8px 0;
+        line-height: 1.6;
+    }
+    
+    .explanation ul, .explanation ol {
+        margin: 8px 0;
+        padding-left: 25px;
+        line-height: 1.6;
+    }
+    
+    .explanation li {
+        margin: 4px 0;
+    }
+    
+    .explanation code {
+        background: #fef9c3;
+        color: #78350f;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 0.9em;
+    }
+    
+    .explanation pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 0.85em;
+    }
+    
+    .explanation pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    
+    .explanation table {
+        width: 100%;
+        margin: 12px 0;
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+    
+    .explanation th {
+        background: #fde68a;
+        border: 1px solid #e5e7eb;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #92400e;
+    }
+    
+    .explanation td {
+        border: 1px solid #e5e7eb;
+        padding: 6px 12px;
+        background: white;
+    }
+    
+    .explanation tr:hover td {
+        background: #fffbeb;
+    }
+    
+    .explanation strong {
+        color: #92400e;
+        font-weight: 600;
+    }
+    
+    .explanation em {
+        color: #b45309;
+        font-style: italic;
+    }
+    
+    .explanation h4 {
+        color: #92400e;
+        margin: 15px 0 8px 0;
+        font-size: 1em;
+    }
+</style>
+
+</head>
+<body>
+
+
+<div class="story-header">
+    <h1>ODIBI CORE Pipeline Story</h1>
+    <div class="meta">
+        <strong>Pipeline ID:</strong> run_20251102_221219<br>
+        <strong>Start Time:</strong> 2025-11-02T22:12:19.295755<br>
+        <strong>Duration:</strong> 0.01s
+    </div>
+</div>
+
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">11</div>
+        <div class="label">Total Steps</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">11</div>
+        <div class="label">Success</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">0</div>
+        <div class="label">Failed</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">100.0%</div>
+        <div class="label">Success Rate</div>
+    </div>
+</div>
+
+<div class="step-card success">
+<h2>aggregate_kpis</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>22.247220323713602</td></tr><tr><td>2</td><td>84.50099374486737</td></tr><tr><td>3</td><td>87.15144852397701</td></tr><tr><td>4</td><td>32.81500133486526</td></tr><tr><td>5</td><td>27.37581923538134</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>22.247220323713602</td><td>44.494440647427204</td><td>44.49</td></tr><tr><td>2</td><td>84.50099374486737</td><td>169.00198748973474</td><td>169.0</td></tr><tr><td>3</td><td>87.15144852397701</td><td>174.30289704795402</td><td>174.3</td></tr><tr><td>4</td><td>32.81500133486526</td><td>65.63000266973052</td><td>65.63</td></tr><tr><td>5</td><td>27.37581923538134</td><td>54.75163847076268</td><td>54.75</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Aggregate Finance metrics over 1d windows<br />
+<strong>Layer</strong>: 🥇 Gold (Aggregation)<br />
+<strong>What it does</strong>: Computes VaR, settlement_lag using windowed aggregation<br />
+<strong>Why it matters</strong>: Provides time-series trends for decision-making<br />
+<strong>Domain context</strong>: 1d window aligns with Finance SLAs<br />
+<strong>ODIBI_CORE feature</strong>: Built-in windowing with late-arrival handling</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_dim_accounts</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>14.098015793458218</td></tr><tr><td>2</td><td>1.3956110516908038</td></tr><tr><td>3</td><td>60.028321533971194</td></tr><tr><td>4</td><td>23.532679813275546</td></tr><tr><td>5</td><td>85.1082602920913</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>14.098015793458218</td><td>28.196031586916437</td><td>28.2</td></tr><tr><td>2</td><td>1.3956110516908038</td><td>2.7912221033816076</td><td>2.79</td></tr><tr><td>3</td><td>60.028321533971194</td><td>120.05664306794239</td><td>120.06</td></tr><tr><td>4</td><td>23.532679813275546</td><td>47.06535962655109</td><td>47.07</td></tr><tr><td>5</td><td>85.1082602920913</td><td>170.2165205841826</td><td>170.22</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Ingest raw accounts from UNKNOWN source<br />
+<strong>Layer</strong>: 🥉 Bronze (Raw Data)<br />
+<strong>What it does</strong>: Reads data from Finance systems without transformation<br />
+<strong>Why it matters</strong>: Preserves raw data for audit trail and reprocessing<br />
+<strong>Domain context</strong>: FIX protocol streams<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format ingestion with automatic schema detection</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_dim_counterparties</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>42.217155013043865</td></tr><tr><td>2</td><td>62.85116402158377</td></tr><tr><td>3</td><td>41.8122872324302</td></tr><tr><td>4</td><td>39.37182374329403</td></tr><tr><td>5</td><td>62.68401220797735</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>42.217155013043865</td><td>84.43431002608773</td><td>84.43</td></tr><tr><td>2</td><td>62.85116402158377</td><td>125.70232804316754</td><td>125.7</td></tr><tr><td>3</td><td>41.8122872324302</td><td>83.6245744648604</td><td>83.62</td></tr><tr><td>4</td><td>39.37182374329403</td><td>78.74364748658806</td><td>78.74</td></tr><tr><td>5</td><td>62.68401220797735</td><td>125.3680244159547</td><td>125.37</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Ingest raw accounts from UNKNOWN source<br />
+<strong>Layer</strong>: 🥉 Bronze (Raw Data)<br />
+<strong>What it does</strong>: Reads data from Finance systems without transformation<br />
+<strong>Why it matters</strong>: Preserves raw data for audit trail and reprocessing<br />
+<strong>Domain context</strong>: FIX protocol streams<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format ingestion with automatic schema detection</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_dim_transactions</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>69.46996763511925</td></tr><tr><td>2</td><td>86.54621210788676</td></tr><tr><td>3</td><td>6.258740331442169</td></tr><tr><td>4</td><td>35.96021018377571</td></tr><tr><td>5</td><td>99.45518934736037</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>69.46996763511925</td><td>138.9399352702385</td><td>138.94</td></tr><tr><td>2</td><td>86.54621210788676</td><td>173.09242421577352</td><td>173.09</td></tr><tr><td>3</td><td>6.258740331442169</td><td>12.517480662884338</td><td>12.52</td></tr><tr><td>4</td><td>35.96021018377571</td><td>71.92042036755142</td><td>71.92</td></tr><tr><td>5</td><td>99.45518934736037</td><td>198.91037869472075</td><td>198.91</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Ingest raw accounts from UNKNOWN source<br />
+<strong>Layer</strong>: 🥉 Bronze (Raw Data)<br />
+<strong>What it does</strong>: Reads data from Finance systems without transformation<br />
+<strong>Why it matters</strong>: Preserves raw data for audit trail and reprocessing<br />
+<strong>Domain context</strong>: FIX protocol streams<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format ingestion with automatic schema detection</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>ingest_fact</h2>
+<div class="step-meta"><strong>Layer:</strong> bronze | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>30.1217324718411</td></tr><tr><td>2</td><td>25.713530199074164</td></tr><tr><td>3</td><td>17.06869915210264</td></tr><tr><td>4</td><td>22.894877568850802</td></tr><tr><td>5</td><td>19.747383514969606</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>30.1217324718411</td><td>60.2434649436822</td><td>60.24</td></tr><tr><td>2</td><td>25.713530199074164</td><td>51.42706039814833</td><td>51.43</td></tr><tr><td>3</td><td>17.06869915210264</td><td>34.13739830420528</td><td>34.14</td></tr><tr><td>4</td><td>22.894877568850802</td><td>45.789755137701604</td><td>45.79</td></tr><tr><td>5</td><td>19.747383514969606</td><td>39.49476702993921</td><td>39.49</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Ingest raw accounts from UNKNOWN source<br />
+<strong>Layer</strong>: 🥉 Bronze (Raw Data)<br />
+<strong>What it does</strong>: Reads data from Finance systems without transformation<br />
+<strong>Why it matters</strong>: Preserves raw data for audit trail and reprocessing<br />
+<strong>Domain context</strong>: FIX protocol streams<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format ingestion with automatic schema detection</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>join_star</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>79.12573623787219</td></tr><tr><td>2</td><td>20.681277519894525</td></tr><tr><td>3</td><td>45.47880298536431</td></tr><tr><td>4</td><td>14.748334832309451</td></tr><tr><td>5</td><td>22.880505328019986</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>79.12573623787219</td><td>158.25147247574438</td><td>158.25</td></tr><tr><td>2</td><td>20.681277519894525</td><td>41.36255503978905</td><td>41.36</td></tr><tr><td>3</td><td>45.47880298536431</td><td>90.95760597072862</td><td>90.96</td></tr><tr><td>4</td><td>14.748334832309451</td><td>29.496669664618903</td><td>29.5</td></tr><tr><td>5</td><td>22.880505328019986</td><td>45.76101065603997</td><td>45.76</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Merge multiple Finance data sources into unified dataset<br />
+<strong>Layer</strong>: 🥈 Silver (Transformation)<br />
+<strong>What it does</strong>: Combines 0 sources using common keys<br />
+<strong>Why it matters</strong>: Creates single source of truth for VaR<br />
+<strong>Domain context</strong>: Essential for star schema pattern<br />
+<strong>ODIBI_CORE feature</strong>: DAG-based dependency resolution ensures all sources loaded first</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>publish_star</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>36.71283606353709</td></tr><tr><td>2</td><td>64.72811667539035</td></tr><tr><td>3</td><td>55.76531816985037</td></tr><tr><td>4</td><td>89.26747680922378</td></tr><tr><td>5</td><td>41.13959967312951</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>36.71283606353709</td><td>73.42567212707418</td><td>73.43</td></tr><tr><td>2</td><td>64.72811667539035</td><td>129.4562333507807</td><td>129.46</td></tr><tr><td>3</td><td>55.76531816985037</td><td>111.53063633970073</td><td>111.53</td></tr><tr><td>4</td><td>89.26747680922378</td><td>178.53495361844756</td><td>178.53</td></tr><tr><td>5</td><td>41.13959967312951</td><td>82.27919934625902</td><td>82.28</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Publish final Finance business-ready dataset<br />
+<strong>Layer</strong>: 🥇 Gold (Output)<br />
+<strong>What it does</strong>: Saves VaR, settlement_lag to PARQUET for consumption<br />
+<strong>Why it matters</strong>: Delivers analytics-ready data to Finance stakeholders<br />
+<strong>Domain context</strong>: Meets Finance reporting requirements<br />
+<strong>ODIBI_CORE feature</strong>: Multi-format output with schema preservation</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>transform_dim_accounts</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>32.96045288465956</td></tr><tr><td>2</td><td>1.6150628348428175</td></tr><tr><td>3</td><td>56.525303085920676</td></tr><tr><td>4</td><td>60.952720460725</td></tr><tr><td>5</td><td>80.88989569423349</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>32.96045288465956</td><td>65.92090576931912</td><td>65.92</td></tr><tr><td>2</td><td>1.6150628348428175</td><td>3.230125669685635</td><td>3.23</td></tr><tr><td>3</td><td>56.525303085920676</td><td>113.05060617184135</td><td>113.05</td></tr><tr><td>4</td><td>60.952720460725</td><td>121.90544092145</td><td>121.91</td></tr><tr><td>5</td><td>80.88989569423349</td><td>161.77979138846698</td><td>161.78</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Apply business logic for VaR calculation<br />
+<strong>Layer</strong>: 🥈 Silver (Transformation)<br />
+<strong>What it does</strong>: Adds calculated fields, enriches Finance data<br />
+<strong>Why it matters</strong>: Transforms raw data into analysis-ready format<br />
+<strong>Domain context</strong>: Supports VaR tracking<br />
+<strong>ODIBI_CORE feature</strong>: Parallel execution for independent transforms</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>transform_dim_counterparties</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 0.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>1.4239904921194202</td></tr><tr><td>2</td><td>58.85731239949309</td></tr><tr><td>3</td><td>7.401082269785553</td></tr><tr><td>4</td><td>33.11710022571766</td></tr><tr><td>5</td><td>45.954001178065774</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>1.4239904921194202</td><td>2.8479809842388404</td><td>2.85</td></tr><tr><td>2</td><td>58.85731239949309</td><td>117.71462479898618</td><td>117.71</td></tr><tr><td>3</td><td>7.401082269785553</td><td>14.802164539571105</td><td>14.8</td></tr><tr><td>4</td><td>33.11710022571766</td><td>66.23420045143531</td><td>66.23</td></tr><tr><td>5</td><td>45.954001178065774</td><td>91.90800235613155</td><td>91.91</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Apply business logic for VaR calculation<br />
+<strong>Layer</strong>: 🥈 Silver (Transformation)<br />
+<strong>What it does</strong>: Adds calculated fields, enriches Finance data<br />
+<strong>Why it matters</strong>: Transforms raw data into analysis-ready format<br />
+<strong>Domain context</strong>: Supports VaR tracking<br />
+<strong>ODIBI_CORE feature</strong>: Parallel execution for independent transforms</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>transform_dim_transactions</h2>
+<div class="step-meta"><strong>Layer:</strong> silver | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>92.34597290115104</td></tr><tr><td>2</td><td>25.692276124938207</td></tr><tr><td>3</td><td>67.06984540090293</td></tr><tr><td>4</td><td>78.62231536887421</td></tr><tr><td>5</td><td>59.59819050096515</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>92.34597290115104</td><td>184.6919458023021</td><td>184.69</td></tr><tr><td>2</td><td>25.692276124938207</td><td>51.384552249876414</td><td>51.38</td></tr><tr><td>3</td><td>67.06984540090293</td><td>134.13969080180587</td><td>134.14</td></tr><tr><td>4</td><td>78.62231536887421</td><td>157.24463073774842</td><td>157.24</td></tr><tr><td>5</td><td>59.59819050096515</td><td>119.1963810019303</td><td>119.2</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Apply business logic for VaR calculation<br />
+<strong>Layer</strong>: 🥈 Silver (Transformation)<br />
+<strong>What it does</strong>: Adds calculated fields, enriches Finance data<br />
+<strong>Why it matters</strong>: Transforms raw data into analysis-ready format<br />
+<strong>Domain context</strong>: Supports VaR tracking<br />
+<strong>ODIBI_CORE feature</strong>: Parallel execution for independent transforms</p></div>
+    </div>
+</details>
+
+</div>
+<div class="step-card success">
+<h2>validate_star</h2>
+<div class="step-meta"><strong>Layer:</strong> gold | <strong>Status:</strong> success | <strong>Duration:</strong> 1.00ms
+ | <strong>Row Delta:</strong> +0
+</div>
+
+<details>
+    <summary><strong>Before Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 2</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th></tr></thead><tbody><tr><td>1</td><td>77.72708557918865</td></tr><tr><td>2</td><td>99.17991019362891</td></tr><tr><td>3</td><td>14.542626884428289</td></tr><tr><td>4</td><td>60.291931909385646</td></tr><tr><td>5</td><td>62.18303678946956</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>After Snapshot</strong></summary>
+    <div class="collapsible-content">
+        <p><strong>Row Count:</strong> 100 | <strong>Columns:</strong> 4</p>
+
+<details>
+    <summary><strong>Schema</strong></summary>
+    <div class="collapsible-content">
+        <table class="data-table"><caption>Column Schema</caption><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td>id</td><td>int64</td></tr><tr><td>VaR</td><td>float64</td></tr><tr><td>calculated</td><td>float64</td></tr><tr><td>enriched</td><td>float64</td></tr></tbody></table>
+    </div>
+</details>
+
+<h4>Sample Data</h4><table class="data-table"><caption>First 5 rows</caption><thead><tr><th>id</th><th>VaR</th><th>calculated</th><th>enriched</th></tr></thead><tbody><tr><td>1</td><td>77.72708557918865</td><td>155.4541711583773</td><td>155.45</td></tr><tr><td>2</td><td>99.17991019362891</td><td>198.35982038725783</td><td>198.36</td></tr><tr><td>3</td><td>14.542626884428289</td><td>29.085253768856578</td><td>29.09</td></tr><tr><td>4</td><td>60.291931909385646</td><td>120.58386381877129</td><td>120.58</td></tr><tr><td>5</td><td>62.18303678946956</td><td>124.36607357893912</td><td>124.37</td></tr></tbody></table>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Schema Changes</strong></summary>
+    <div class="collapsible-content">
+        <div class="schema-diff"><div class="schema-added"><strong>Added Columns:</strong><ul><li class="added">+ calculated</li><li class="added">+ enriched</li></ul></div></div>
+    </div>
+</details>
+
+
+<details open>
+    <summary><strong>Step Explanation</strong></summary>
+    <div class="collapsible-content">
+        <div class="explanation"><p><strong>Purpose</strong>: Validate Finance data quality and filter invalid records<br />
+<strong>Layer</strong>: 🥇 Gold (Quality Assurance)<br />
+<strong>What it does</strong>: Checks domain-specific rules, removes invalid rows<br />
+<strong>Why it matters</strong>: Ensures only high-quality data reaches analytics consumers<br />
+<strong>Domain context</strong>: Critical for {'pii': False, 'sox_compliant': True, 'latency_sla': '5min'}<br />
+<strong>ODIBI_CORE feature</strong>: Truth-preserving snapshots show exactly what was filtered and why</p></div>
+    </div>
+</details>
+
+</div>
+
+<div class="footer">
+    Generated by ODIBI CORE v1.0 Story Generator (Phase 5: DAG Execution)<br>
+    Framework: Node-centric, engine-agnostic, config-driven data engineering
+</div>
+
+</body></html>

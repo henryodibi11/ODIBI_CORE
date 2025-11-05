@@ -469,9 +469,24 @@ class AzureAdapter(CloudAdapterBase):
     def _parse_path(self, path: str) -> tuple:
         """
         Parse Azure path into container and file path.
+        
+        BEHAVIOR:
+        - If self.container is set: path is treated as file_path within default container
+        - If self.container is None: path must be "container/file_path" format
+        
+        Examples:
+            # With default container
+            adapter = AzureAdapter(container="bronze")
+            adapter._parse_path("data/file.parquet")
+            # Returns: ("bronze", "data/file.parquet")
+            
+            # Without default container
+            adapter = AzureAdapter()
+            adapter._parse_path("bronze/data/file.parquet")
+            # Returns: ("bronze", "data/file.parquet")
 
         Args:
-            path: Path like "container/folder/file.parquet" or "/container/folder/file.parquet"
+            path: "folder/file.parquet" (if container set) or "container/folder/file.parquet"
 
         Returns:
             tuple: (container_name, file_path)
@@ -479,11 +494,14 @@ class AzureAdapter(CloudAdapterBase):
         # Remove leading slash if present
         path = path.lstrip("/")
 
-        # Split into container and file path
-        parts = path.split("/", 1)
+        # If default container is set, entire path is file_path within that container
+        if self.container:
+            return self.container, path
 
-        if len(parts) == 1:
+        # Otherwise, split path into container and file_path
+        if "/" not in path:
             # Just container name
-            return parts[0], ""
-        else:
-            return parts[0], parts[1]
+            return path, ""
+
+        parts = path.split("/", 1)
+        return parts[0], parts[1]
